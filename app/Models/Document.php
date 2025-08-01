@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Document extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'date_received',
+        'document_no',
+        'document_type',
+        'particulars',
+        'oed_received',
+        'oed_date_received',
+        'oed_status',
+        'oed_remarks',
+        'records_received',
+        'records_date_received',
+        'records_remarks',
+        'under_review_at',
+        'in_progress_at',
+        'for_release_at',
+    ];
+
+    protected $casts = [
+        'date_received' => 'date',
+        'oed_date_received' => 'datetime',
+        'records_date_received' => 'datetime',
+        'under_review_at' => 'datetime',
+        'in_progress_at' => 'datetime',
+        'for_release_at' => 'datetime',
+    ];
+}
