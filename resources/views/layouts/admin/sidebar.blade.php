@@ -2,22 +2,26 @@
     $prefix = Auth::user()->hasRole('admin') ? 'admin' : 'users';
 @endphp
 
-<div x-cloak :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false" class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden"></div>
+<!-- Overlay -->
+<div x-cloak :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false"
+     class="fixed inset-0 z-20 transition-opacity bg-black opacity-50"></div>
 
-<div x-cloak :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'" class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-gray-900 lg:translate-x-0 lg:static lg:inset-0">
+<!-- Sidebar -->
+<div x-cloak :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
+     class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-white shadow-lg">
     <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
             <img src="{{ asset('images/favicon.jpg') }}" alt="Custom Icon" class="h-8 w-8 rounded-full">
-            <span class="mx-2 text-2xl font-semibold text-white">Doctracks</span>
+            <span class="mx-2 text-2xl font-semibold text-gray-800">Doctracks</span>
         </div>
     </div>
 
     <nav class="mt-10">
-        <a class="flex items-center px-6 py-2 mt-4 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed($prefix.'.documents.index') ? 'text-gray-100 bg-gray-700 bg-opacity-25' : '' }}"
-        href="{{ route($prefix . '.documents.index') }}">
+        <a class="flex items-center px-6 py-2 mt-4 text-gray-700 hover:bg-gray-100 hover:text-blue-600 rounded {{ Route::currentRouteNamed($prefix.'.documents.index') ? 'text-blue-600 bg-gray-100' : '' }}"
+           href="{{ route($prefix . '.documents.index') }}">
             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h4a2 2 0 012 2v12a2 2 0 01-2 2z" />
+                      d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h4a2 2 0 012 2v12a2 2 0 01-2 2z" />
             </svg>
             <span class="mx-3">Documents</span>
         </a>
@@ -25,7 +29,7 @@
         @if(Auth::user()->hasRole('admin'))
             <div x-data="{ open: {{ Route::is('admin.users.index', 'admin.roles.index', 'admin.permissions.index') ? 'true' : 'false' }} }" class="relative">
                 <button @click="open = !open"
-                    class="flex items-center px-6 py-2 mt-4 w-full {{ Route::is('admin.users.index', 'admin.roles.index', 'admin.permissions.index') ? 'text-gray-100 bg-gray-700 bg-opacity-25' : 'text-gray-500' }} hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100">
+                    class="flex items-center px-6 py-2 mt-4 w-full {{ Route::is('admin.users.index', 'admin.roles.index', 'admin.permissions.index') ? 'text-blue-600 bg-gray-100' : 'text-gray-700' }} hover:bg-gray-100 hover:text-blue-600 rounded">
                     <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -36,8 +40,8 @@
                     </svg>
                 </button>
 
-                <div x-show="open" x-cloak class="dropdown_branding w-full">
-                    <a class="flex items-center px-6 py-2 mt-4 ml-5 {{ Route::currentRouteNamed('admin.users.index') ? 'text-gray-100 bg-gray-700 bg-opacity-25' : 'text-gray-500' }} hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+                <div x-show="open" x-cloak>
+                    <a class="flex items-center px-6 py-2 mt-2 ml-5 {{ Route::currentRouteNamed('admin.users.index') ? 'text-blue-600 bg-gray-100' : 'text-gray-700' }} hover:bg-gray-100 hover:text-blue-600 rounded"
                        href="{{ route('admin.users.index') }}">
                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -46,7 +50,7 @@
                         <span class="mx-3">User</span>
                     </a>
 
-                    <a class="flex items-center px-6 py-2 mt-4 ml-5 {{ Route::currentRouteNamed('admin.roles.index') ? 'text-gray-100 bg-gray-700 bg-opacity-25' : 'text-gray-500' }} hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+                    <a class="flex items-center px-6 py-2 mt-2 ml-5 {{ Route::currentRouteNamed('admin.roles.index') ? 'text-blue-600 bg-gray-100' : 'text-gray-700' }} hover:bg-gray-100 hover:text-blue-600 rounded"
                        href="{{ route('admin.roles.index') }}">
                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -55,7 +59,7 @@
                         <span class="mx-3">Role</span>
                     </a>
 
-                    <a class="flex items-center px-6 py-2 mt-4 ml-5 {{ Route::currentRouteNamed('admin.permissions.index') ? 'text-gray-100 bg-gray-700 bg-opacity-25' : 'text-gray-500' }} hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+                    <a class="flex items-center px-6 py-2 mt-2 ml-5 {{ Route::currentRouteNamed('admin.permissions.index') ? 'text-blue-600 bg-gray-100' : 'text-gray-700' }} hover:bg-gray-100 hover:text-blue-600 rounded"
                        href="{{ route('admin.permissions.index') }}">
                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -66,6 +70,5 @@
                 </div>
             </div>
         @endif
-
     </nav>
 </div>

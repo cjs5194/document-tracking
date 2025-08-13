@@ -11,7 +11,7 @@
         class="bg-white rounded border border-gray-400 shadow-lg p-4 w-full max-w-2xl mx-auto"
         @click.stop
     >
-        <h2 class="text-lg font-semibold mb-4">Submit a Document</h2>
+        <h2 class="text-lg font-semibold mb-4">Add Records</h2>
 
         <form
             action="{{ auth()->user()->hasRole('admin') ? route('admin.documents.store') : route('documents.store') }}"
@@ -24,9 +24,10 @@
                 <!-- Your input fields (unchanged) -->
                 <div>
                     <label class="block text-sm font-medium mb-1">Date Received</label>
-                    <input type="date" name="date_received" class="w-full border rounded p-2 text-sm" required>
+                    <input type="datetime-local" name="date_received"
+                        value="{{ now()->format('Y-m-d\TH:i') }}"
+                        class="w-full border rounded p-2 text-sm" required>
                 </div>
-
                 <div>
                     <label class="block text-sm font-medium mb-1">Document No.</label>
                     <input type="text" name="document_no" class="w-full border rounded p-2 text-sm" required>
@@ -34,7 +35,70 @@
 
                 <div>
                     <label class="block text-sm font-medium mb-1">Document Type</label>
-                    <input type="text" name="document_type" class="w-full border rounded p-2 text-sm" required>
+                    <select name="document_type" class="w-full border rounded p-2 text-sm" required>
+                        <option value="" disabled selected>Select type</option>
+                        <option value="ACIC">ACIC</option>
+                        <option value="Accomplishment Report">Accomplishment Report</option>
+                        <option value="Activity Proposal">Activity Proposal</option>
+                        <option value="Advisory">Advisory</option>
+                        <option value="APP">APP</option>
+                        <option value="Authority to Release (ATR)">Authority to Release (ATR)</option>
+                        <option value="Audit Itinerary">Audit Itinerary</option>
+                        <option value="Audit Observation Memorandum (AOM)">Audit Observation Memorandum (AOM)</option>
+                        <option value="Bid Documents">Bid Documents</option>
+                        <option value="Certificate (Appreciation, Attendance, etc..)">Certificate (Appreciation, Attendance, etc..)</option>
+                        <option value="Certification">Certification</option>
+                        <option value="Clearance">Clearance</option>
+                        <option value="Contract of Service">Contract of Service</option>
+                        <option value="CSPRF">CSPRF</option>
+                        <option value="Customer Satisfaction Survey (CSS)">Customer Satisfaction Survey (CSS)</option>
+                        <option value="Daily Time Record (DTR)">Daily Time Record (DTR)</option>
+                        <option value="DA Comms">DA Comms</option>
+                        <option value="DA Memo">DA Memo</option>
+                        <option value="DA SO">DA SO</option>
+                        <option value="Demand Letter">Demand Letter</option>
+                        <option value="Disbursement Voucher (DV)">Disbursement Voucher (DV)</option>
+                        <option value="Document Registration/ Revision Form(DRR)">Document Registration/ Revision Form(DRR)</option>
+                        <option value="Endorsement">Endorsement</option>
+                        <option value="Financial Accomplishment Report (FAR)">Financial Accomplishment Report (FAR)</option>
+                        <option value="FOI Request">FOI Request</option>
+                        <option value="Incident Report (IR)">Incident Report (IR)</option>
+                        <option value="ITR">ITR</option>
+                        <option value="Leave Application">Leave Application</option>
+                        <option value="Letter">Letter</option>
+                        <option value="LDDAP-ADA">LDDAP-ADA</option>
+                        <option value="Memorandum of Agreement (MOA, MOU)">Memorandum of Agreement (MOA, MOU)</option>
+                        <option value="Minutes of Meeting (MoM)">Minutes of Meeting (MoM)</option>
+                        <option value="Modification Advice Form (MAF)">Modification Advice Form (MAF)</option>
+                        <option value="Notice of Award">Notice of Award</option>
+                        <option value="Notice of Finality of Decision (NFD)">Notice of Finality of Decision (NFD)</option>
+                        <option value="Notice of Salary Adjustment (NOSA)">Notice of Salary Adjustment (NOSA)</option>
+                        <option value="Notice of Step Increment (NOSI)">Notice of Step Increment (NOSI)</option>
+                        <option value="Obligation (ORS)">Obligation (ORS)</option>
+                        <option value="Overtime Request">Overtime Request</option>
+                        <option value="PAR">PAR</option>
+                        <option value="PCC Letter">PCC Letter</option>
+                        <option value="PCC MEMO">PCC MEMO</option>
+                        <option value="PCC RC Letter">PCC RC Letter</option>
+                        <option value="PCC SO">PCC SO</option>
+                        <option value="Performance and Commitment Review (PCR)">Performance and Commitment Review (PCR)</option>
+                        <option value="PPMP">PPMP</option>
+                        <option value="Program of Works (POW)">Program of Works (POW)</option>
+                        <option value="Project Proposal">Project Proposal</option>
+                        <option value="Purchase Order (PO)">Purchase Order (PO)</option>
+                        <option value="Purchase Request PR">Purchase Request PR</option>
+                        <option value="PTR">PTR</option>
+                        <option value="Revised Activity Proposal">Revised Activity Proposal</option>
+                        <option value="Report">Report</option>
+                        <option value="Research Proposal">Research Proposal</option>
+                        <option value="Resolution">Resolution</option>
+                        <option value="Statement of Account (SOA)">Statement of Account (SOA)</option>
+                        <option value="Training Request">Training Request</option>
+                        <option value="Transmittal">Transmittal</option>
+                        <option value="Travel Order">Travel Order</option>
+                        <option value="Travel Report">Travel Report</option>
+                        <option value="Trip Ticket">Trip Ticket</option>
+                    </select>
                 </div>
 
                 <div>
@@ -43,7 +107,7 @@
                 </div>
             </div>
 
-            <div class="flex justify-end gap-2 mt-5">
+            <div class="flex justify-end gap-2 mt-8">
                 <button type="button" @click="open = false" class="bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded hover:bg-gray-400">
                     Cancel
                 </button>

@@ -27,7 +27,7 @@ class Document extends Model
     ];
 
     protected $casts = [
-        'date_received' => 'date',
+        'date_received' => 'datetime',
         'oed_date_received' => 'datetime',
         'records_date_received' => 'datetime',
         'under_review_at' => 'datetime',

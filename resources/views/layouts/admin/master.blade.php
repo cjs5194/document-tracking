@@ -20,18 +20,37 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
-        <div x-data="{ sidebarOpen: false }" class="flex h-screen bg-gray-200 font-roboto">
-            @include('layouts.admin.sidebar')
+        <div
+            x-data="{ sidebarOpen: false }"
+            class="flex h-screen bg-gray-200 font-roboto"
+        >
+            <!-- Sidebar -->
+            <div
+                x-show="sidebarOpen"
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="-translate-x-full opacity-0"
+                x-transition:enter-end="translate-x-0 opacity-100"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="translate-x-0 opacity-100"
+                x-transition:leave-end="-translate-x-full opacity-0"
+                class="fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg overflow-y-auto"
+                @click.away="sidebarOpen = false"
+                style="display: none;" <!-- prevents FOUC -->
+            >
+                @include('layouts.admin.sidebar')
+            </div>
 
+            <!-- Main Content -->
             <div class="flex-1 flex flex-col overflow-hidden">
                 @include('layouts.admin.header')
 
                 <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-                    <div class="container mx-auto py-8">
+                    <div class="px-4 py-2">
                         {{ $slot }}
                     </div>
                 </main>
             </div>
+
             <!-- ✅ Toast Notification Support -->
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>

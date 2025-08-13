@@ -9,10 +9,15 @@ use Illuminate\Support\Facades\Auth;
 class DocumentController extends Controller
 {
     // Display a listing of documents
-    public function index()
+    public function index(Request $request)
     {
-        $documents = Document::latest()->paginate(10);
-        return view('documents.index', compact('documents'));
+        $perPage = $request->input('perPage', 10); // default 10
+
+        $documents = Document::orderBy('created_at', 'desc')
+            ->paginate($perPage)
+            ->appends(['perPage' => $perPage]); // keep dropdown selection on links
+
+        return view('documents.index', compact('documents', 'perPage'));
     }
 
     // Show the form for creating a new document
