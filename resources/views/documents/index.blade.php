@@ -3,7 +3,8 @@
         {{-- Start Cards --}}
         <div class="flex flex-wrap gap-6">
             <!-- All Documents -->
-            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'all']) }}'"
+                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-500">
                         <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -18,7 +19,8 @@
             </div>
 
             <!-- In Progress -->
-            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+             <div onclick="window.location.href='{{ route('documents.index', ['status' => 'In Progress']) }}'"
+                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500">
                         <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -34,7 +36,8 @@
             </div>
 
             <!-- Under Review -->
-            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'Under Review']) }}'"
+                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-yellow-500">
                         <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,7 +52,8 @@
             </div>
 
             <!-- For Release -->
-            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'For Release']) }}'"
+                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-green-500">
                         <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -64,7 +68,8 @@
             </div>
 
             <!-- Returned -->
-            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'Returned']) }}'"
+                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-red-500">
                         <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,7 +84,8 @@
             </div>
 
             <!-- No Status -->
-            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'no-status']) }}'"
+                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-500">
                         <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">

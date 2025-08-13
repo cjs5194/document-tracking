@@ -15,6 +15,15 @@ class DocumentController extends Controller
 
         $query = Document::query();
 
+        // ✅ Filter by card click (status)
+        if ($request->filled('status') && $request->status !== 'all') {
+            if ($request->status === 'no-status') {
+                $query->whereNull('oed_status');
+            } else {
+                $query->where('oed_status', $request->status);
+            }
+        }
+
         // ✅ Filter by document type if provided
         if ($request->filled('document_type')) {
             $query->where('document_type', $request->document_type);
@@ -44,8 +53,9 @@ class DocumentController extends Controller
             if ($request->records_received === 'Received') {
                 $query->where('records_received', 'Received');
             } elseif ($request->records_received === 'Not yet received') {
-                $query->where(function($q) {
-                    $q->whereNull('records_received')->orWhere('records_received', '!=', 'Received');
+                $query->where(function ($q) {
+                    $q->whereNull('records_received')
+                    ->orWhere('records_received', '!=', 'Received');
                 });
             }
         }
@@ -54,19 +64,20 @@ class DocumentController extends Controller
             ->paginate($perPage)
             ->appends([
                 'perPage' => $perPage,
+                'status' => $request->status,
                 'document_type' => $request->document_type,
-                'oed_received' => $request->oed_received, // keep OED Level in pagination links
+                'oed_received' => $request->oed_received,
                 'oed_status' => $request->oed_status,
-                 'records_received' => $request->records_received,
+                'records_received' => $request->records_received,
             ]);
 
         // ✅ Real counts for cards (ignore pagination)
-        $allCount        = Document::count();
-        $inProgressCount = Document::where('oed_status', 'In Progress')->count();
+        $allCount         = Document::count();
+        $inProgressCount  = Document::where('oed_status', 'In Progress')->count();
         $underReviewCount = Document::where('oed_status', 'Under Review')->count();
-        $forReleaseCount = Document::where('oed_status', 'For Release')->count();
-        $returnedCount   = Document::where('oed_status', 'Returned')->count();
-        $noStatusCount     = Document::whereNull('oed_status')->count();
+        $forReleaseCount  = Document::where('oed_status', 'For Release')->count();
+        $returnedCount    = Document::where('oed_status', 'Returned')->count();
+        $noStatusCount    = Document::whereNull('oed_status')->count();
 
         return view('documents.index', compact(
             'documents',
@@ -78,8 +89,6 @@ class DocumentController extends Controller
             'returnedCount',
             'noStatusCount'
         ));
-
-        // return view('documents.index', compact('documents', 'perPage'));
     }
 
     // Show the form for creating a new document
