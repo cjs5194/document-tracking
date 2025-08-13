@@ -1,73 +1,26 @@
-<!-- Document Submission Modal -->
+<!-- Filter Modal -->
 <div
-    x-data="{
-        open: false,
-        now: '',
-        timer: null,
-        updateTime() {
-            const d = new Date();
-            const pad = (n) => n.toString().padStart(2, '0');
-            this.now = d.getFullYear() + '-' +
-                pad(d.getMonth() + 1) + '-' +
-                pad(d.getDate()) + 'T' +
-                pad(d.getHours()) + ':' +
-                pad(d.getMinutes());
-        },
-        startTimer() {
-            this.updateTime();
-            this.timer = setInterval(() => this.updateTime(), 1000);
-        },
-        stopTimer() {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
-    }"
-    x-show="open"
+    x-show="filterOpen"
     x-cloak
     class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30"
-    @keydown.escape.window="open = false; stopTimer()"
-    @click.away="open = false; stopTimer()"
-    @open-modal.window="
-        if ($event.detail === 'document-submission') {
-            open = true;
-            startTimer();
-        }
-    "
+    @keydown.escape.window="filterOpen = false"
+    @click.away="filterOpen = true"
 >
     <!-- Modal Wrapper -->
     <div
         class="bg-white rounded border border-gray-400 shadow-lg p-4 w-full max-w-2xl mx-auto"
         @click.stop
     >
-        <h2 class="text-lg font-semibold mb-4">Add Records</h2>
+        <h2 class="text-lg font-semibold mb-4">Filter Documents</h2>
 
-        <form
-            action="{{ auth()->user()->hasRole('admin') ? route('admin.documents.store') : route('documents.store') }}"
-            method="POST"
-        >
-            @csrf
-            <input type="hidden" name="id" value="{{ auth()->user()->id }}">
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <!-- Date Received -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Date Received</label>
-                    <input type="datetime-local" name="date_received"
-                        x-model="now"
-                        class="w-full border rounded p-2 text-sm" required>
-                </div>
-
-                <!-- Document No. -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Document No.</label>
-                    <input type="text" name="document_no" class="w-full border rounded p-2 text-sm" required>
-                </div>
-
+        <form action="{{ route('documents.index') }}" method="GET">
+            <!-- ➜ Make the selects 2×2 using a grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Document Type -->
                 <div>
                     <label class="block text-sm font-medium mb-1">Document Type</label>
-                    <select name="document_type" class="w-full border rounded p-2 text-sm" required>
-                        <option value="" disabled selected>Select type</option>
+                    <select name="document_type" class="w-full border rounded p-2 text-sm">
+                        <option value="" {{ request('document_type') ? '' : 'selected' }}>All</option>
                         <option value="ACIC">ACIC</option>
                         <option value="Accomplishment Report">Accomplishment Report</option>
                         <option value="Activity Proposal">Activity Proposal</option>
@@ -132,20 +85,47 @@
                     </select>
                 </div>
 
-                <!-- Particulars -->
+                <!-- OED Level -->
                 <div>
-                    <label class="block text-sm font-medium mb-1">Particulars</label>
-                    <input type="text" name="particulars" class="w-full border rounded p-2 text-sm" required>
+                    <label class="block text-sm font-medium mb-1">OED Level</label>
+                    <select name="oed_received" class="w-full border rounded p-2 text-sm">
+                        <option value="" {{ request('oed_received') ? '' : 'selected' }}>All</option>
+                        <option value="Received" {{ request('oed_received') == 'Received' ? 'selected' : '' }}>Received</option>
+                        <option value="Not yet received" {{ request('oed_received') == 'Not yet received' ? 'selected' : '' }}>Not yet received</option>
+                    </select>
+                </div>
+
+                <!-- Filter Status -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Filter Status</label>
+                    <select name="oed_status" class="w-full border rounded p-2 text-sm">
+                        <option value="" {{ request('oed_status') ? '' : 'selected' }}>All</option>
+                        <option value="For Release" {{ request('oed_status') == 'For Release' ? 'selected' : '' }}>For Release</option>
+                        <option value="Under Review" {{ request('oed_status') == 'Under Review' ? 'selected' : '' }}>Under Review</option>
+                        <option value="In Progress" {{ request('oed_status') == 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                        <option value="Returned" {{ request('oed_status') == 'Returned' ? 'selected' : '' }}>Returned</option>
+                        <option value="null" {{ request('oed_status') == 'null' ? 'selected' : '' }}>No status</option>
+                    </select>
+                </div>
+
+                <!-- Record Section -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Record Section</label>
+                    <select name="records_received" class="w-full border rounded p-2 text-sm">
+                        <option value="" {{ request('records_received') ? '' : 'selected' }}>All</option>
+                        <option value="Received" {{ request('records_received') == 'Received' ? 'selected' : '' }}>Received</option>
+                        <option value="Not yet received" {{ request('records_received') == 'Not yet received' ? 'selected' : '' }}>Not yet received</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- Actions -->
-            <div class="flex justify-end gap-2 mt-8">
-                <button type="button" @click="open = false; stopTimer()" class="bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded hover:bg-gray-400">
-                    Cancel
-                </button>
+            <!-- Footer buttons -->
+            <div class="flex justify-end gap-2 mt-6">
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
-                    Submit
+                    Apply Filter
+                </button>
+                <button type="button" @click="filterOpen = false" class="bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded hover:bg-gray-400">
+                    Cancel
                 </button>
             </div>
         </form>

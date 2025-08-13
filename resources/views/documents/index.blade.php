@@ -1,93 +1,140 @@
 <x-admin-layout>
-    <div x-data="{ filterStatus: 'all', open: false }">
-        {{-- <div class="flex flex-wrap gap-6">
-            <!-- All Tickets Card -->
-            <div
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white transition duration-300">
-                    <div class="p-3 rounded-full bg-blue-600 bg-opacity-75">
-                        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
+    <div x-data="{ filterStatus: 'all', open: false, filterOpen: false }">
+        {{-- Start Cards --}}
+        <div class="flex flex-wrap gap-6">
+            <!-- All Documents -->
+            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-500">
+                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                     <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">
-                            {{ $documents->count() }}</h4>
-                        <div class="text-gray-500">All Tickets</div>
+                        <h4 class="text-2xl font-semibold text-gray-700">{{ $allCount }}</h4>
+                        <div class="text-gray-500">All Documents</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Pending Tickets Card -->
-            <div
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white transition duration-300">
-                    <div class="p-3 rounded-full bg-yellow-600 bg-opacity-75">
-                        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M12 8v4l3 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <!-- In Progress -->
+            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500">
+                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M12 8v4l3 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="12" cy="12" r="9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                     <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">5</h4>
-                        <div class="text-gray-500">Pending Tickets</div>
+                        <h4 class="text-2xl font-semibold text-gray-700">{{ $inProgressCount }}</h4>
+                        <div class="text-gray-500">In Progress</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Approved Tickets Card -->
-            <div
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white transition duration-300">
-                    <div class="p-3 rounded-full bg-green-600 bg-opacity-75">
-                        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
+            <!-- Under Review -->
+            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-yellow-500">
+                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                     <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">15</h4>
-                        <div class="text-gray-500">Approved Tickets</div>
+                        <h4 class="text-2xl font-semibold text-gray-700">{{ $underReviewCount }}</h4>
+                        <div class="text-gray-500">Under Review</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Declined Tickets Card -->
-            <div
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white transition duration-300">
-                    <div class="p-3 rounded-full bg-red-600 bg-opacity-75">
-                        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
+            <!-- For Release -->
+            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-green-500">
+                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M8 7h8M8 11h8M8 15h8M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                     <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">56</h4>
-                        <div class="text-gray-500">Declined Tickets</div>
+                        <h4 class="text-2xl font-semibold text-gray-700">{{ $forReleaseCount }}</h4>
+                        <div class="text-gray-500">For Release</div>
                     </div>
                 </div>
             </div>
-        </div> --}}
+
+            <!-- Returned -->
+            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-red-500">
+                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="mx-5">
+                        <h4 class="text-2xl font-semibold text-gray-700">{{ $returnedCount }}</h4>
+                        <div class="text-gray-500">Returned</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Status -->
+            <div class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
+                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-500">
+                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <circle cx="12" cy="12" r="9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 12h8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="mx-5">
+                        <h4 class="text-2xl font-semibold text-gray-700">{{ $noStatusCount }}</h4>
+                        <div class="text-gray-500">No Status</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Documents Table -->
         <div class="overflow-hidden rounded-lg shadow-md border border-gray-200 mt-4">
             <table class="min-w-full bg-white text-sm border-collapse">
                 <thead>
-                    <tr>
-                        <th colspan="10" class="text-left p-2">
-                            @hasrole('records')
-                                <div x-data="{ open: false }" class="relative w-full sm:w-auto flex justify-start py-2">
-                                    <button @click="open = true" class="text-gray-800 px-4 py-2 rounded border border-gray-400 hover:border-gray-600">
+                    <!-- Wrap in a single Alpine scope so both modals share the same state -->
+                    <div x-data="{ open: false, filterOpen: false }">
+                        <tr>
+                            <th colspan="10" class="text-left p-2">
+                                <div class="relative w-full sm:w-auto flex justify-start py-2">
+                                    @hasrole('records')
+                                    <button
+                                        @click="$dispatch('open-modal', 'document-submission')"
+                                        class="text-gray-800 px-4 py-2 rounded border border-gray-400 hover:border-gray-600"
+                                    >
                                         + Add New Document
                                     </button>
+                                    @endhasrole
 
-                                    <!-- Modal -->
-                                    @include('components.documents.document-modal')
+                                    <!-- Filter Button -->
+                                    <button
+                                        @click="filterOpen = true"
+                                        class="text-gray-800 px-4 py-2 rounded border border-gray-400 hover:border-gray-600 ml-2"
+                                    >
+                                        Filter
+                                    </button>
+
+                                    <!-- Clear filter -->
+                                    <a href="{{ route('documents.index') }}"
+                                        class="text-gray-800 px-4 py-2 rounded border border-gray-400 hover:border-gray-600 ml-2">
+                                        Clear Filter
+                                    </a>
                                 </div>
-                            @endhasrole
-                        </th>
-                    </tr>
+                            </th>
+                        </tr>
+
+                        <!-- Both modals inside same scope -->
+                        @include('components.documents.document-modal')
+                        @include('components.documents.filter-modal')
+                    </div>
+
                     <tr class="bg-gray-100">
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Date Received</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Document #</th>
@@ -117,7 +164,7 @@
                                     @hasrole('oed')
                                         <div class="relative inline-block text-left" x-data="{ open: false }">
                                             <button @click="open = !open"
-                                                class="bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700">
+                                                class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
                                                 Action
                                             </button>
                                             <div x-show="open" @click.away="open = false" x-cloak
@@ -136,35 +183,40 @@
                             </td>
                             <td class="px-5 py-3">{{ $document->oed_date_received?->format('F j, Y g:i A') }}</td>
                             <td class="px-5 py-3">
-                                @hasrole('oed')
-                                    @if ($document->oed_date_received)
-                                        <form action="{{ route('documents.oed.status', $document->id) }}" method="POST">
-                                            @csrf
-                                            <select
-                                                name="oed_status"
-                                                onchange="this.form.submit()"
-                                                class="text-xs rounded pl-2 pr-5 py-1 border border-gray-300
-                                                    {{ $document->oed_status === 'Under Review' ? 'bg-yellow-500' : '' }}
-                                                    {{ $document->oed_status === 'In Progress' ? 'bg-green-500' : '' }}
-                                                    {{ $document->oed_status === 'For Release' ? 'bg-blue-500' : '' }}">
-                                                <option value="" disabled {{ is_null($document->oed_status) ? 'selected' : '' }}>Action</option>
-                                                <option value="Under Review" {{ $document->oed_status === 'Under Review' ? 'selected' : '' }}>Under Review</option>
-                                                <option value="In Progress" {{ $document->oed_status === 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                                                <option value="For Release" {{ $document->oed_status === 'For Release' ? 'selected' : '' }}>For Release</option>
-                                            </select>
-                                        </form>
-                                    @else
-                                        <span class="text-xs text-gray-400">—</span>
-                                    @endif
+                            @hasrole('oed')
+                                @if ($document->oed_date_received)
+                                    <form action="{{ route('documents.oed.status', $document->id) }}" method="POST">
+                                        @csrf
+                                        <select
+                                            name="oed_status"
+                                            onchange="this.form.submit()"
+                                            class="text-xs rounded pl-2 pr-5 py-1 border border-gray-300
+                                                {{ $document->oed_status === 'Under Review' ? 'bg-yellow-500' : '' }}
+                                                {{ $document->oed_status === 'In Progress' ? 'bg-blue-500' : '' }}
+                                                {{ $document->oed_status === 'For Release' ? 'bg-green-500' : '' }}
+                                                {{ $document->oed_status === 'Returned' ? '' : '' }}">
+                                            <option value="" disabled {{ is_null($document->oed_status) ? 'selected' : '' }}>Action</option>
+                                            <option value="Under Review" {{ $document->oed_status === 'Under Review' ? 'selected' : '' }}>Under Review</option>
+                                            <option value="In Progress" {{ $document->oed_status === 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                                            <option value="For Release" {{ $document->oed_status === 'For Release' ? 'selected' : '' }}>For Release</option>
+                                            <option value="Returned"
+                                                {{ $document->oed_status === 'Returned' ? 'selected' : '' }}
+                                                disabled>Returned</option>
+                                        </select>
+                                    </form>
                                 @else
-                                    <span class="whitespace-nowrap px-2 py-1 rounded-full text-xs text-white
-                                        {{ $document->oed_status === 'Under Review' ? 'bg-yellow-500' : '' }}
-                                        {{ $document->oed_status === 'In Progress' ? 'bg-green-500' : '' }}
-                                        {{ $document->oed_status === 'For Release' ? 'bg-blue-500' : '' }}">
-                                        {{ $document->oed_status ?? '' }}
-                                    </span>
-                                @endhasrole
-                            </td>
+                                    <span class="text-xs text-gray-400">—</span>
+                                @endif
+                            @else
+                                <span class="whitespace-nowrap px-2 py-1 rounded-full text-xs text-white
+                                    {{ $document->oed_status === 'Under Review' ? 'bg-yellow-500' : '' }}
+                                    {{ $document->oed_status === 'In Progress' ? 'bg-blue-500' : '' }}
+                                    {{ $document->oed_status === 'For Release' ? 'bg-green-500' : '' }}
+                                    {{ $document->oed_status === 'Returned' ? 'bg-red-500' : '' }}">
+                                    {{ $document->oed_status ?? '' }}
+                                </span>
+                            @endhasrole
+                        </td>
                             <td class="px-5 py-3 text-xs text-gray-700 leading-5 space-y-1">
                                 @if ($document->under_review_at)
                                     <div><strong>Under Review:</strong> {{ $document->under_review_at->format('F j, Y g:i A') }}</div>
@@ -218,7 +270,7 @@
                                     @if ($document->oed_status === 'For Release' && is_null($document->records_date_received))
                                         <div class="relative inline-block text-left" x-data="{ open: false }">
                                             <button @click="open = !open"
-                                                class="bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700">
+                                                class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
                                                 Action
                                             </button>
                                             <div x-show="open" @click.away="open = false" x-cloak
@@ -249,7 +301,7 @@
                             <td class="px-5 py-3">{{ $document->records_date_received?->format('F j, Y g:i A') }}</td>
                             <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->records_remarks }}' }">
                                 @hasrole('records')
-                                    @if ($document->records_date_received)
+                                    @if ($document->records_date_received || $document->oed_status === 'Returned')
                                         <template x-if="!editing">
                                             <span @click="editing = true" class="cursor-pointer text-blue-600 hover:underline" x-text="remarks || 'Add Remarks'"></span>
                                         </template>

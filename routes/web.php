@@ -19,7 +19,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Document routes for regular users (non-admin)
-Route::middleware(['auth', 'role:user'])->group(function () {
+Route::middleware(['auth', 'role:user|oed|records|admin'])->group(function () {
     Route::resource('documents', DocumentController::class)
         ->names('documents')
         ->except(['edit', 'update', 'destroy']);

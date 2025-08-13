@@ -13,11 +13,73 @@ class DocumentController extends Controller
     {
         $perPage = $request->input('perPage', 10); // default 10
 
-        $documents = Document::orderBy('created_at', 'desc')
-            ->paginate($perPage)
-            ->appends(['perPage' => $perPage]); // keep dropdown selection on links
+        $query = Document::query();
 
-        return view('documents.index', compact('documents', 'perPage'));
+        // ✅ Filter by document type if provided
+        if ($request->filled('document_type')) {
+            $query->where('document_type', $request->document_type);
+        }
+
+        // ✅ Filter by OED Level if provided
+        if ($request->filled('oed_received')) {
+            if ($request->oed_received === 'Received') {
+                $query->where('oed_received', 'Received');
+            } elseif ($request->oed_received === 'Not yet received') {
+                $query->whereNull('oed_received')
+                    ->orWhere('oed_received', '!=', 'Received');
+            }
+        }
+
+        // ✅ Filter by OED Status
+        if ($request->filled('oed_status')) {
+            if ($request->oed_status === 'null') {
+                $query->whereNull('oed_status');
+            } else {
+                $query->where('oed_status', $request->oed_status);
+            }
+        }
+
+        // ✅ Filter by Record Section (records_received)
+        if ($request->filled('records_received')) {
+            if ($request->records_received === 'Received') {
+                $query->where('records_received', 'Received');
+            } elseif ($request->records_received === 'Not yet received') {
+                $query->where(function($q) {
+                    $q->whereNull('records_received')->orWhere('records_received', '!=', 'Received');
+                });
+            }
+        }
+
+        $documents = $query->orderBy('created_at', 'desc')
+            ->paginate($perPage)
+            ->appends([
+                'perPage' => $perPage,
+                'document_type' => $request->document_type,
+                'oed_received' => $request->oed_received, // keep OED Level in pagination links
+                'oed_status' => $request->oed_status,
+                 'records_received' => $request->records_received,
+            ]);
+
+        // ✅ Real counts for cards (ignore pagination)
+        $allCount        = Document::count();
+        $inProgressCount = Document::where('oed_status', 'In Progress')->count();
+        $underReviewCount = Document::where('oed_status', 'Under Review')->count();
+        $forReleaseCount = Document::where('oed_status', 'For Release')->count();
+        $returnedCount   = Document::where('oed_status', 'Returned')->count();
+        $noStatusCount     = Document::whereNull('oed_status')->count();
+
+        return view('documents.index', compact(
+            'documents',
+            'perPage',
+            'allCount',
+            'inProgressCount',
+            'underReviewCount',
+            'forReleaseCount',
+            'returnedCount',
+            'noStatusCount'
+        ));
+
+        // return view('documents.index', compact('documents', 'perPage'));
     }
 
     // Show the form for creating a new document
@@ -172,5 +234,4 @@ class DocumentController extends Controller
 
         return response()->json(['success' => true]);
     }
-
 }
