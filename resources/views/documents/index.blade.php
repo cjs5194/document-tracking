@@ -196,11 +196,11 @@
                                         <select
                                             name="oed_status"
                                             onchange="this.form.submit()"
-                                            class="text-xs rounded pl-2 pr-5 py-1 border border-gray-300
+                                            class="text-xs text-white rounded pl-2 pr-5 py-1 border border-gray-300
                                                 {{ $document->oed_status === 'Under Review' ? 'bg-yellow-500' : '' }}
                                                 {{ $document->oed_status === 'In Progress' ? 'bg-blue-500' : '' }}
                                                 {{ $document->oed_status === 'For Release' ? 'bg-green-500' : '' }}
-                                                {{ $document->oed_status === 'Returned' ? '' : '' }}">
+                                                {{ $document->oed_status === 'Returned' ? 'bg-red-500' : '' }}">
                                             <option value="" disabled {{ is_null($document->oed_status) ? 'selected' : '' }}>Action</option>
                                             <option value="Under Review" {{ $document->oed_status === 'Under Review' ? 'selected' : '' }}>Under Review</option>
                                             <option value="In Progress" {{ $document->oed_status === 'In Progress' ? 'selected' : '' }}>In Progress</option>
