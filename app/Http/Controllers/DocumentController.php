@@ -61,6 +61,15 @@ class DocumentController extends Controller
             }
         }
 
+        // ✅ Filter by Completed
+        if ($request->filled('completed')) {
+            if ($request->completed === 'Completed') {
+                $query->whereNotNull('completed_at');
+            } elseif ($request->completed === 'Not yet completed') {
+                $query->whereNull('completed_at');
+            }
+        }
+
         $documents = $query->orderBy('created_at', 'desc')
             ->paginate($perPage)
             ->appends([
@@ -70,6 +79,7 @@ class DocumentController extends Controller
                 'oed_received' => $request->oed_received,
                 'oed_status' => $request->oed_status,
                 'records_received' => $request->records_received,
+                'completed' => $request->completed,
             ]);
 
         // ✅ Real counts for cards (ignore pagination)
@@ -268,5 +278,14 @@ class DocumentController extends Controller
         ]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function markCompleted(Document $document)
+    {
+        $document->update([
+            'completed_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Document marked as completed.');
     }
 }

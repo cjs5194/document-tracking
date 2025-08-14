@@ -24,7 +24,8 @@ class Document extends Model
         'under_review_at',
         'in_progress_at',
         'for_release_at',
-        'returned_at'
+        'returned_at',
+        'completed_at',
     ];
 
     protected $casts = [
@@ -35,6 +36,7 @@ class Document extends Model
         'in_progress_at' => 'datetime',
         'for_release_at' => 'datetime',
         'returned_at' => 'datetime',
+        'completed_at' => 'datetime',
     ];
 
     public function logs()

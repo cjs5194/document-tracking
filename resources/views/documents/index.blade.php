@@ -154,12 +154,13 @@
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Records</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Date Received</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Remarks</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Completed</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($documents as $document)
                         <tr class="border-b border-gray-200 hover:bg-gray-50">
-                            <td class="px-5 py-3">{{ $document->date_received?->format('F j, Y g:i A') }}</td>
+                            <td class="px-5 py-3">{{ $document->date_received?->format('m/d/Y h:i A') }}</td>
                             <td class="px-5 py-3 whitespace-nowrap">{{ $document->document_no }}</td>
                             <td class="px-5 py-3">{{ $document->document_type }}</td>
                             <td class="px-5 py-3">{{ $document->particulars }}</td>
@@ -187,7 +188,7 @@
                                     @endhasrole
                                 @endif
                             </td>
-                            <td class="px-5 py-3">{{ $document->oed_date_received?->format('F j, Y g:i A') }}</td>
+                            <td class="px-5 py-3">{{ $document->oed_date_received?->format('m/d/Y h:i A') }}</td>
                             <td class="px-5 py-3">
                             @hasrole('oed')
                                 @if ($document->oed_date_received)
@@ -321,7 +322,7 @@
                                     <span class="text-sm font-bold">{{ $document->records_received }}</span>
                                 @endhasrole
                             </td>
-                            <td class="px-5 py-3">{{ $document->records_date_received?->format('F j, Y g:i A') }}</td>
+                            <td class="px-5 py-3">{{ $document->records_date_received?->format('m/d/Y h:i A') }}</td>
                             <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->records_remarks }}' }">
                                 @hasrole('records')
                                     @if ($document->records_date_received || $document->oed_status === 'Returned')
@@ -358,6 +359,34 @@
                                 @else
                                     <span>{{ $document->records_remarks }}</span>
                                 @endhasrole
+                            </td>
+                            {{-- Completed documents --}}
+                            <td class="px-5 py-3 text-xs text-gray-700">
+                                @if ($document->completed_at)
+                                {{-- check icon for completed docs --}}
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-6 h-6 text-green-600 inline-block"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2">
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                @else
+                                    @role('records')
+                                        @if (!is_null($document->records_received))
+                                            <form action="{{ route('documents.markCompleted', $document->id) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-100">
+                                                    Completed
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endrole
+                                @endif
                             </td>
                         </tr>
                     @empty

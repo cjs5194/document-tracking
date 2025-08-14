@@ -119,6 +119,16 @@
                 </div>
             </div>
 
+            <!-- Completed -->
+            <div>
+                <label class="block text-sm font-medium mb-1">Completed</label>
+                <select name="completed" class="w-full border rounded p-2 text-sm">
+                    <option value="" {{ request('completed') ? '' : 'selected' }}>All</option>
+                    <option value="Completed" {{ request('completed') == 'Completed' ? 'selected' : '' }}>Completed</option>
+                    <option value="Not yet completed" {{ request('completed') == 'Not yet completed' ? 'selected' : '' }}>Not yet completed</option>
+                </select>
+            </div>
+
             <!-- Footer buttons -->
             <div class="flex justify-end gap-2 mt-6">
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">

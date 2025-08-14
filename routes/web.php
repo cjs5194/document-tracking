@@ -53,6 +53,9 @@ Route::middleware(['auth', 'role:records'])->group(function () {
     Route::post('/documents/{document}/records-remarks', [DocumentController::class, 'updateRecordsRemarks'])
     ->name('documents.records.remarks')
     ->middleware('role:records');
+
+    Route::patch('/documents/{document}/completed', [DocumentController::class, 'markCompleted'])
+        ->name('documents.markCompleted');
 });
 
 // Admin-only delete user route
