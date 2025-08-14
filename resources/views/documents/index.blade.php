@@ -1,5 +1,5 @@
 <x-admin-layout>
-    <div x-data="{ filterStatus: 'all', open: false, filterOpen: false }">
+    <div x-data="{ filterStatus: 'all', open: false, filterOpen: false, logsOpen: false }">
         {{-- Start Cards --}}
         <div class="flex flex-wrap gap-6">
             <!-- All Documents -->
@@ -149,7 +149,7 @@
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">OED Level</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Date Received</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Status</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Status Timestamp</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Logs</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Remarks OED</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Records</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Date Received</th>
@@ -196,7 +196,7 @@
                                         <select
                                             name="oed_status"
                                             onchange="this.form.submit()"
-                                            class="text-xs text-white rounded pl-2 pr-5 py-1 border border-gray-300
+                                            class="text-xs rounded pl-2 pr-5 py-1 border border-gray-300
                                                 {{ $document->oed_status === 'Under Review' ? 'bg-yellow-500' : '' }}
                                                 {{ $document->oed_status === 'In Progress' ? 'bg-blue-500' : '' }}
                                                 {{ $document->oed_status === 'For Release' ? 'bg-green-500' : '' }}
@@ -223,17 +223,34 @@
                                 </span>
                             @endhasrole
                         </td>
-                            <td class="px-5 py-3 text-xs text-gray-700 leading-5 space-y-1">
-                                @if ($document->under_review_at)
-                                    <div><strong>Under Review:</strong> {{ $document->under_review_at->format('F j, Y g:i A') }}</div>
-                                @endif
-                                @if ($document->in_progress_at)
-                                    <div><strong>In Progress:</strong> {{ $document->in_progress_at->format('F j, Y g:i A') }}</div>
-                                @endif
-                                @if ($document->for_release_at)
-                                    <div><strong>For Release:</strong> {{ $document->for_release_at->format('F j, Y g:i A') }}</div>
-                                @endif
-                            </td>
+                        <td class="px-5 py-3">
+                            <div x-data="{ logsOpen: false, tooltip: false }" class="relative inline-block">
+                                <!-- Eye Icon Button -->
+                                <button
+                                    @click="logsOpen = true"
+                                    @mouseenter="tooltip = true"
+                                    @mouseleave="tooltip = false"
+                                    class="text-gray-600 hover:text-blue-600 p-1"
+                                >
+                                    <!-- Eye SVG -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+
+                                <!-- Tooltip -->
+                                <div
+                                    x-show="tooltip"
+                                    x-transition
+                                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs bg-gray-800 text-white rounded whitespace-nowrap"
+                                >
+                                    View Logs
+                                </div>
+
+                                @include('components.documents.status-logs-modal')
+                            </div>
+                        </td>
                             <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->oed_remarks }}' }">
                                 @hasrole('oed')
                                     @if ($document->oed_date_received)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
+use App\Models\DocumentLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -185,6 +186,7 @@ class DocumentController extends Controller
 
         $updateData = ['oed_status' => $request->oed_status];
 
+        // Preserve individual timestamps for logs
         if ($request->oed_status === 'Under Review' && !$document->under_review_at) {
             $updateData['under_review_at'] = now();
         } elseif ($request->oed_status === 'In Progress' && !$document->in_progress_at) {
@@ -194,6 +196,14 @@ class DocumentController extends Controller
         }
 
         $document->update($updateData);
+
+        // Record log for this status change
+        DocumentLog::create([
+            'document_id' => $document->id,
+            'changed_by' => Auth::user()->name,
+            'type' => 'status',
+            'status' => $request->oed_status,
+        ]);
 
         return redirect()->back()->with('status', 'OED status updated.');
     }
@@ -218,6 +228,14 @@ class DocumentController extends Controller
             'records_date_received' => now(),
         ]);
 
+        // Record log for Records Section
+        DocumentLog::create([
+            'document_id' => $document->id,
+            'changed_by' => Auth::user()->name,
+            'type' => 'records',
+            'status' => 'Received',
+        ]);
+
         return redirect()->back()->with('success', 'Marked as received by Records.');
     }
 
@@ -225,7 +243,15 @@ class DocumentController extends Controller
     {
         $document->update([
             'oed_status' => 'Returned',
-            'for_release_at' => null, // Optional: clear timestamp
+            // don't clear other timestamps so previous logs remain
+        ]);
+
+        // ✅ Create a log entry for Returned
+        DocumentLog::create([
+            'document_id' => $document->id,
+            'changed_by' => Auth::user()->name,
+            'type' => 'status',
+            'status' => 'Returned',
         ]);
 
         return redirect()->back()->with('success', 'Document returned to OED.');

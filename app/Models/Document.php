@@ -24,6 +24,7 @@ class Document extends Model
         'under_review_at',
         'in_progress_at',
         'for_release_at',
+        'returned_at'
     ];
 
     protected $casts = [
@@ -33,5 +34,11 @@ class Document extends Model
         'under_review_at' => 'datetime',
         'in_progress_at' => 'datetime',
         'for_release_at' => 'datetime',
+        'returned_at' => 'datetime',
     ];
+
+    public function logs()
+    {
+        return $this->hasMany(DocumentLog::class);
+    }
 }
