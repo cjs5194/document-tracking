@@ -26,6 +26,8 @@ class Document extends Model
         'for_release_at',
         'returned_at',
         'completed_at',
+        'forwarded_to_oed',
+        'forwarded_to_records',
     ];
 
     protected $casts = [
@@ -37,6 +39,8 @@ class Document extends Model
         'for_release_at' => 'datetime',
         'returned_at' => 'datetime',
         'completed_at' => 'datetime',
+        'forwarded_to_oed' => 'datetime',
+        'forwarded_to_records' => 'datetime',
     ];
 
     public function logs()

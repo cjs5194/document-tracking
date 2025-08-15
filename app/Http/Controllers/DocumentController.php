@@ -253,7 +253,7 @@ class DocumentController extends Controller
     {
         $document->update([
             'oed_status' => 'Returned',
-            // don't clear other timestamps so previous logs remain
+            'forwarded_to_records' => null,
         ]);
 
         // ✅ Create a log entry for Returned
@@ -287,5 +287,24 @@ class DocumentController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Document marked as completed.');
+    }
+
+    public function markForwardedToOED($id)
+    {
+        $document = Document::findOrFail($id);
+        $document->forwarded_to_oed = now();
+        $document->save();
+
+        return back()->with('success', 'Document forwarded to OED successfully.');
+    }
+
+    public function markForwardedToRecords($id)
+    {
+        $document = Document::findOrFail($id);
+        $document->update([
+            'forwarded_to_records' => now(),
+        ]);
+
+        return back()->with('success', 'Document forwarded to Records successfully.');
     }
 }

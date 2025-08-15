@@ -40,6 +40,9 @@ Route::middleware(['auth', 'role:oed'])->group(function () {
     Route::post('/documents/{document}/remarks', [DocumentController::class, 'updateOedRemarks'])
     ->name('documents.oed.remarks')
     ->middleware('role:oed');
+
+    Route::patch('/documents/{id}/forward-to-records', [DocumentController::class, 'markForwardedToRecords'])
+    ->name('documents.forwardToRecords');
 });
 
 // ✅ Records-specific routes
@@ -56,6 +59,9 @@ Route::middleware(['auth', 'role:records'])->group(function () {
 
     Route::patch('/documents/{document}/completed', [DocumentController::class, 'markCompleted'])
         ->name('documents.markCompleted');
+
+    Route::post('/documents/{id}/forwarded-to-oed', [DocumentController::class, 'markForwardedToOED'])->name('documents.forwarded_to_oed');
+
 });
 
 // Admin-only delete user route

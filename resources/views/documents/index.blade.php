@@ -146,11 +146,13 @@
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Document #</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Document Type</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Particulars</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">FWD to OED</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">OED Level</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Date Received</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Status</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Logs</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Remarks OED</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">FWD to RECORDS</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Records</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Date Received</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Remarks</th>
@@ -164,27 +166,45 @@
                             <td class="px-5 py-3 whitespace-nowrap">{{ $document->document_no }}</td>
                             <td class="px-5 py-3">{{ $document->document_type }}</td>
                             <td class="px-5 py-3">{{ $document->particulars }}</td>
+                            <td class="px-4 py-2">
+                                @if(!$document->forwarded_to_oed)
+                                    @role('records')
+                                        <form action="{{ route('documents.forwarded_to_oed', $document->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="border border-gray-400 text-gray-700 px-3 py-1 rounded hover:bg-gray-100">
+                                                Delivered
+                                            </button>
+                                        </form>
+                                    @endrole
+                                @else
+                                    <span class="text-sm text-gray-600">
+                                        {{ \Carbon\Carbon::parse($document->forwarded_to_oed)->format('m/d/Y h:i A') }}
+                                    </span>
+                                @endif
+                            </td>
                             <td class="px-5 py-3">
                                 @if ($document->oed_date_received)
                                     <span class="text-sm font-bold">Received</span>
                                 @else
                                     @hasrole('oed')
-                                        <div class="relative inline-block text-left" x-data="{ open: false }">
-                                            <button @click="open = !open"
-                                                class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
-                                                Action
-                                            </button>
-                                            <div x-show="open" @click.away="open = false" x-cloak
-                                                class="absolute z-10 mt-2 w-32 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
-                                                <form action="{{ route('documents.oed.receive.single', $document->id) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                        Mark as Received
-                                                    </button>
-                                                </form>
+                                        @if ($document->forwarded_to_oed)
+                                            <div class="relative inline-block text-left" x-data="{ open: false }">
+                                                <button @click="open = !open"
+                                                    class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
+                                                    Action
+                                                </button>
+                                                <div x-show="open" @click.away="open = false" x-cloak
+                                                    class="absolute z-10 mt-2 w-32 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <form action="{{ route('documents.oed.receive.single', $document->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                            Mark as Received
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     @endhasrole
                                 @endif
                             </td>
@@ -290,37 +310,57 @@
                                 @endhasrole
                             </td>
                             <td class="px-5 py-3">
-                                @hasrole('records')
-                                    @if ($document->oed_status === 'For Release' && is_null($document->records_date_received))
-                                        <div class="relative inline-block text-left" x-data="{ open: false }">
-                                            <button @click="open = !open"
-                                                class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
-                                                Action
-                                            </button>
-                                            <div x-show="open" @click.away="open = false" x-cloak
-                                                class="absolute z-10 mt-2 w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
-                                                <form method="POST" action="{{ route('documents.records.receive', $document->id) }}">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                        Mark as Received
-                                                    </button>
-                                                </form>
-                                                <form method="POST" action="{{ route('documents.records.return', $document->id) }}">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100">
-                                                        Returned to OED
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    @else
-                                        <span class="text-sm font-bold">{{ $document->records_received }}</span>
-                                    @endif
+                                @if ($document->forwarded_to_records)
+                                    <span class="text-xs text-gray-500">
+                                        {{ $document->forwarded_to_records->format('m/d/Y h:i A') }}
+                                    </span>
                                 @else
-                                    <span class="text-sm font-bold">{{ $document->records_received }}</span>
-                                @endhasrole
+                                    @hasrole('oed')
+                                        @if ($document->oed_status === 'For Release')
+                                            <form action="{{ route('documents.forwardToRecords', $document->id) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit"
+                                                    class="border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
+                                                    Delivered
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endhasrole
+                                @endif
+                            </td>
+                            <td class="px-5 py-3">
+                                @if ($document->records_received)
+                                    <span class="text-sm font-bold">Received</span>
+                                @else
+                                    @hasrole('records')
+                                        @if ($document->oed_status === 'For Release' && $document->forwarded_to_records)
+                                            <div class="relative inline-block text-left" x-data="{ open: false }">
+                                                <button @click="open = !open"
+                                                    class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
+                                                    Action
+                                                </button>
+                                                <div x-show="open" @click.away="open = false" x-cloak
+                                                    class="absolute z-10 mt-2 w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                                    <form method="POST" action="{{ route('documents.records.receive', $document->id) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                            Mark as Received
+                                                        </button>
+                                                    </form>
+                                                    <form method="POST" action="{{ route('documents.records.return', $document->id) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100">
+                                                            Returned to OED
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endhasrole
+                                @endif
                             </td>
                             <td class="px-5 py-3">{{ $document->records_date_received?->format('m/d/Y h:i A') }}</td>
                             <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->records_remarks }}' }">
@@ -363,17 +403,37 @@
                             {{-- Completed documents --}}
                             <td class="px-5 py-3 text-xs text-gray-700">
                                 @if ($document->completed_at)
-                                {{-- check icon for completed docs --}}
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        class="w-6 h-6 text-green-600 inline-block"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        stroke-width="2">
-                                        <path stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
+                                    <div x-data="{ show: false, x: null, y: null }" class="relative inline-flex items-center">
+                                        <svg
+                                            x-ref="icon"
+                                            @mouseenter="
+                                                const r = $refs.icon.getBoundingClientRect();
+                                                x = r.left;
+                                                y = r.top + r.height / 2;
+                                                show = true;
+                                            "
+                                            @mouseleave="show = false"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="w-6 h-6 text-green-600 inline-block cursor-pointer"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+
+                                        <template x-teleport="body">
+                                            <template x-if="show && x !== null && y !== null">
+                                                <div
+                                                    x-transition
+                                                    class="fixed z-50 px-2 py-1 text-xs bg-gray-800 text-white rounded shadow pointer-events-none whitespace-nowrap"
+                                                    :style="`top:${y}px; left:${x}px; transform: translate(calc(-100% - 8px), -50%);`"
+                                                >
+                                                    Completed at {{ $document->completed_at->format('m/d/Y h:i A') }}
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </div>
                                 @else
                                     @role('records')
                                         @if (!is_null($document->records_received))
