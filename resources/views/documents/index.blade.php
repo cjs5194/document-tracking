@@ -1,9 +1,12 @@
 <x-admin-layout>
+    @php
+        $prefix = Auth::user()->hasRole('admin') ? 'admin.' : '';
+    @endphp
     <div x-data="{ filterStatus: 'all', open: false, filterOpen: false, logsOpen: false }">
         {{-- Start Cards --}}
         <div class="flex flex-wrap gap-6">
             <!-- All Documents -->
-            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'all']) }}'"
+            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'all']) }}'"
                 class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-500">
@@ -19,7 +22,7 @@
             </div>
 
             <!-- In Progress -->
-             <div onclick="window.location.href='{{ route('documents.index', ['status' => 'In Progress']) }}'"
+             <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'In Progress']) }}'"
                 class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500">
@@ -36,7 +39,7 @@
             </div>
 
             <!-- Under Review -->
-            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'Under Review']) }}'"
+            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'Under Review']) }}'"
                 class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-yellow-500">
@@ -52,7 +55,7 @@
             </div>
 
             <!-- For Release -->
-            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'For Release']) }}'"
+            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'For Release']) }}'"
                 class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-green-500">
@@ -68,7 +71,7 @@
             </div>
 
             <!-- Returned -->
-            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'Returned']) }}'"
+            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'Returned']) }}'"
                 class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-red-500">
@@ -84,7 +87,7 @@
             </div>
 
             <!-- No Status -->
-            <div onclick="window.location.href='{{ route('documents.index', ['status' => 'no-status']) }}'"
+            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'no-status']) }}'"
                 class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-500">
@@ -128,7 +131,7 @@
                                     </button>
 
                                     <!-- Clear filter -->
-                                    <a href="{{ route('documents.index') }}"
+                                    <a href="{{ route($prefix . 'documents.index') }}"
                                         class="text-gray-800 px-4 py-2 rounded border border-gray-400 hover:border-gray-600 ml-2">
                                         Clear Filter
                                     </a>
