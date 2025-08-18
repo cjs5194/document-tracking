@@ -29,8 +29,15 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            // ✅ Smart redirect: previous intended route or fallback
-            return redirect()->intended(route('admin.documents.index'));
+            $user = Auth::user();
+
+            // ✅ Redirect based on role
+            if ($user->hasRole('admin')) {
+                return redirect()->intended(route('admin.documents.index'));
+            }
+
+            // For oed, records, or normal users
+            return redirect()->intended(route('documents.index'));
         }
 
         return back()->withErrors([

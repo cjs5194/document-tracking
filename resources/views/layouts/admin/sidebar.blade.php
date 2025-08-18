@@ -1,7 +1,3 @@
-@php
-    $prefix = Auth::user()->hasRole('admin') ? 'admin' : 'users';
-@endphp
-
 <!-- Overlay -->
 <div x-cloak :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false"
      class="fixed inset-0 z-20 transition-opacity bg-black opacity-50"></div>
@@ -17,15 +13,28 @@
     </div>
 
     <nav class="mt-10">
-        <a class="flex items-center px-6 py-2 mt-4 text-gray-700 hover:bg-gray-100 hover:text-blue-600 rounded {{ Route::currentRouteNamed($prefix.'.documents.index') ? 'text-blue-600 bg-gray-100' : '' }}"
-           href="{{ route($prefix . '.documents.index') }}">
-            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h4a2 2 0 012 2v12a2 2 0 01-2 2z" />
-            </svg>
-            <span class="mx-3">Documents</span>
-        </a>
+        {{-- Documents --}}
+        @if(Auth::user()->hasRole('admin'))
+            <a class="flex items-center px-6 py-2 mt-4 text-gray-700 hover:bg-gray-100 hover:text-blue-600 rounded {{ Route::currentRouteNamed('admin.documents.index') ? 'text-blue-600 bg-gray-100' : '' }}"
+               href="{{ route('admin.documents.index') }}">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h4a2 2 0 012 2v12a2 2 0 01-2 2z" />
+                </svg>
+                <span class="mx-3">Documents</span>
+            </a>
+        @else
+            <a class="flex items-center px-6 py-2 mt-4 text-gray-700 hover:bg-gray-100 hover:text-blue-600 rounded {{ Route::currentRouteNamed('documents.index') ? 'text-blue-600 bg-gray-100' : '' }}"
+               href="{{ route('documents.index') }}">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h4a2 2 0 012 2v12a2 2 0 01-2 2z" />
+                </svg>
+                <span class="mx-3">Documents</span>
+            </a>
+        @endif
 
+        {{-- Configurations (Admin Only) --}}
         @if(Auth::user()->hasRole('admin'))
             <div x-data="{ open: {{ Route::is('admin.users.index', 'admin.roles.index', 'admin.permissions.index') ? 'true' : 'false' }} }" class="relative">
                 <button @click="open = !open"

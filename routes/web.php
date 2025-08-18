@@ -18,61 +18,42 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Document routes for regular users (non-admin)
-Route::middleware(['auth', 'role:user|oed|records|admin'])->group(function () {
+// -----------------------------
+// Regular Users (records & oed)
+// -----------------------------
+Route::middleware(['auth', 'role:users|oed|records'])->group(function () {
     Route::resource('documents', DocumentController::class)
         ->names('documents')
         ->except(['edit', 'update', 'destroy']);
-});
 
-// ✅ OED-specific routes
-Route::middleware(['auth', 'role:oed'])->group(function () {
+    // OED routes
     Route::post('/documents/oed-receive-all', [DocumentController::class, 'markAllOedReceived'])
         ->name('documents.oed.receive.all');
-
-    // 🔽 Single document "Mark as Received" route
     Route::post('/documents/{document}/oed-receive', [DocumentController::class, 'markAsReceived'])
         ->name('documents.oed.receive.single');
-
     Route::post('/documents/{document}/oed-status', [DocumentController::class, 'updateOedStatus'])
-    ->name('documents.oed.status');
-
+        ->name('documents.oed.status');
     Route::post('/documents/{document}/remarks', [DocumentController::class, 'updateOedRemarks'])
-    ->name('documents.oed.remarks')
-    ->middleware('role:oed');
-
+        ->name('documents.oed.remarks');
     Route::patch('/documents/{id}/forward-to-records', [DocumentController::class, 'markForwardedToRecords'])
-    ->name('documents.forwardToRecords');
-});
+        ->name('documents.forwardToRecords');
 
-// ✅ Records-specific routes
-Route::middleware(['auth', 'role:records'])->group(function () {
+    // Records routes
     Route::post('/documents/{document}/records-receive', [DocumentController::class, 'markReceivedByRecords'])
         ->name('documents.records.receive');
-
     Route::post('/documents/{document}/records-return', [DocumentController::class, 'returnToOed'])
         ->name('documents.records.return');
-
     Route::post('/documents/{document}/records-remarks', [DocumentController::class, 'updateRecordsRemarks'])
-    ->name('documents.records.remarks')
-    ->middleware('role:records');
-
+        ->name('documents.records.remarks');
     Route::patch('/documents/{document}/completed', [DocumentController::class, 'markCompleted'])
         ->name('documents.markCompleted');
-
-    Route::post('/documents/{id}/forwarded-to-oed', [DocumentController::class, 'markForwardedToOED'])->name('documents.forwarded_to_oed');
-
+    Route::post('/documents/{id}/forwarded-to-oed', [DocumentController::class, 'markForwardedToOED'])
+        ->name('documents.forwarded_to_oed');
 });
 
-// Admin-only delete user route
-Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
-
-// Permission-based route group (custom logic if needed)
-Route::middleware(['permission:publish articles'])->group(function () {
-    // Restricted routes here
-});
-
-// Admin panel routes with prefix and admin.* naming
+// -----------------------------
+// Admin-only routes
+// -----------------------------
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
