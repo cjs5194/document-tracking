@@ -7,7 +7,7 @@
         <!-- Flash Success Message -->
         @include('components.flash-success')
 
-        <x-admin.users.create-user-modal :roles="$roles" />
+        <x-admin.users.create-user-modal :roles="$roles" :divisions="$divisions"/>
 
         <!-- Desktop View -->
         <div class="hidden md:block">
@@ -17,6 +17,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Roles</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Divisions</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -32,12 +33,21 @@
                                     </span>
                                 @endforeach
                             </td>
+
+                            <!-- Divisions -->
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                @foreach($user->divisions as $division)
+                                    <span class="inline-block px-2 py-1 text-xs font-semibold text-gray-700 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
+                                        {{ $division->name }}
+                                    </span>
+                                @endforeach
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center space-x-4">
                                 <!-- View Button -->
                                 <a href="{{ route('admin.users.show', $user) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">View</a>
 
                                 <!-- Edit Button -->
-                                <x-admin.users.create-user-modal :roles="$roles" :user="$user" />
+                                <x-admin.users.create-user-modal :roles="$roles" :divisions="$divisions" :user="$user" />
 
                                 <!-- Delete Button -->
                                 <button type="button" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 deleteButton" data-user-id="{{ $user->id }}">

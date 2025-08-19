@@ -1,4 +1,4 @@
-@props(['roles', 'user' => null, 'assignedRoles' => []])
+@props(['roles', 'divisions' => [], 'user' => null, 'assignedRoles' => []])
 
 @php
     $modalId = $user ? 'edit-user-modal-' . $user->id : 'create-user-modal';
@@ -70,6 +70,24 @@
                                 {{ in_array($role->id, old('roles', $assignedRoles)) || (isset($user) && $user->hasRole($role->name)) ? 'checked' : '' }}
                                 class="mr-2">
                             <label for="{{ $roleId }}" class="text-sm text-gray-900 dark:text-gray-100">{{ $role->name }}</label>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Divisions -->
+                <div class="mb-4">
+                    <label class="block font-medium text-gray-700 dark:text-gray-300">Divisions</label>
+                    @foreach($divisions as $division)
+                        @php
+                            $divisionId = 'division_' . $division->id . '_' . ($user->id ?? 'new');
+                            $userDivisionIds = $user ? $user->divisions->pluck('id')->toArray() : [];
+                        @endphp
+                        <div class="flex items-center mb-2">
+                            <input type="checkbox" id="{{ $divisionId }}" name="divisions[]"
+                                value="{{ $division->id }}"
+                                {{ in_array($division->id, old('divisions', $userDivisionIds)) ? 'checked' : '' }}
+                                class="mr-2">
+                            <label for="{{ $divisionId }}" class="text-sm text-gray-900 dark:text-gray-100">{{ $division->name }}</label>
                         </div>
                     @endforeach
                 </div>

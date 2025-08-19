@@ -1,9 +1,10 @@
+@props(['document', 'divisions'])
+
 <!-- Document Submission Modal -->
 <div
     x-data="{
-        open: false,
-        now: '',
-        timer: null,
+        open: false, selectAll: false, divisionSelect: {},
+        now: '', timer: null,
         updateTime() {
             const d = new Date();
             const pad = (n) => n.toString().padStart(2, '0');
@@ -13,20 +14,13 @@
                 pad(d.getHours()) + ':' +
                 pad(d.getMinutes());
         },
-        startTimer() {
-            this.updateTime();
-            this.timer = setInterval(() => this.updateTime(), 1000);
-        },
-        stopTimer() {
-            clearInterval(this.timer);
-            this.timer = null;
-        }
+        startTimer() { this.updateTime(); this.timer = setInterval(() => this.updateTime(), 1000); },
+        stopTimer() { clearInterval(this.timer); this.timer = null; }
     }"
     x-show="open"
     x-cloak
     class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30"
     @keydown.escape.window="open = false; stopTimer()"
-    @click.away="open = false; stopTimer()"
     @open-modal.window="
         if ($event.detail === 'document-submission') {
             open = true;
@@ -34,120 +28,106 @@
         }
     "
 >
-    <!-- Modal Wrapper -->
+    <!-- Modal Container -->
     <div
-        class="bg-white rounded border border-gray-400 shadow-lg p-4 w-full max-w-2xl mx-auto"
+        class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] flex flex-col border border-gray-400"
         @click.stop
     >
-        <h2 class="text-lg font-semibold mb-4">Add Records</h2>
+        <!-- Header -->
+        <div class="p-4 border-b shrink-0">
+            <h2 class="text-lg font-semibold">Add Records</h2>
+        </div>
 
-        <form
-            action="{{ auth()->user()->hasRole('admin') ? route('admin.documents.store') : route('documents.store') }}"
-            method="POST"
-        >
-            @csrf
-            <input type="hidden" name="id" value="{{ auth()->user()->id }}">
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-4">
+            <form id="documentForm"
+                  action="{{ auth()->user()->hasRole('admin') ? route('admin.documents.store') : route('documents.store') }}"
+                  method="POST"
+                  class="space-y-4"
+            >
+                @csrf
+                <input type="hidden" name="id" value="{{ auth()->user()->id }}">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <!-- Date Received -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Date Received</label>
-                    <input type="datetime-local" name="date_received"
-                        x-model="now"
-                        class="w-full border rounded p-2 text-sm" required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Date Received -->
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Date Received</label>
+                        <input type="datetime-local" name="date_received"
+                               x-model="now"
+                               class="w-full border rounded p-2 text-sm" required>
+                    </div>
+
+                    <!-- Document No. -->
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Document No.</label>
+                        <input type="text" name="document_no" class="w-full border rounded p-2 text-sm" required>
+                    </div>
+
+                    <!-- Document Type -->
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Document Type</label>
+                        <select name="document_type" class="w-full border rounded p-2 text-sm" required>
+                            <option value="" disabled selected>Select type</option>
+                            <option value="TOR">TOR</option>
+                            <!-- your options -->
+                        </select>
+                    </div>
+
+                    <!-- Particulars -->
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Particulars</label>
+                        <input type="text" name="particulars" class="w-full border rounded p-2 text-sm" required>
+                    </div>
                 </div>
 
-                <!-- Document No. -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Document No.</label>
-                    <input type="text" name="document_no" class="w-full border rounded p-2 text-sm" required>
+                <!-- Global Select All -->
+                <div class="flex items-center">
+                    <input type="checkbox" id="selectAll" x-model="selectAll"
+                           @change="$el.closest('form').querySelectorAll('input.user-checkbox').forEach(cb => cb.checked = selectAll);
+                                    Object.keys(divisionSelect).forEach(key => divisionSelect[key] = selectAll)"
+                           class="mr-2">
+                    <label for="selectAll" class="font-medium text-gray-700">Select All</label>
                 </div>
 
-                <!-- Document Type -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Document Type</label>
-                    <select name="document_type" class="w-full border rounded p-2 text-sm" required>
-                        <option value="" disabled selected>Select type</option>
-                        <option value="ACIC">ACIC</option>
-                        <option value="Accomplishment Report">Accomplishment Report</option>
-                        <option value="Activity Proposal">Activity Proposal</option>
-                        <option value="Advisory">Advisory</option>
-                        <option value="APP">APP</option>
-                        <option value="Authority to Release (ATR)">Authority to Release (ATR)</option>
-                        <option value="Audit Itinerary">Audit Itinerary</option>
-                        <option value="Audit Observation Memorandum (AOM)">Audit Observation Memorandum (AOM)</option>
-                        <option value="Bid Documents">Bid Documents</option>
-                        <option value="Certificate (Appreciation, Attendance, etc..)">Certificate (Appreciation, Attendance, etc..)</option>
-                        <option value="Certification">Certification</option>
-                        <option value="Clearance">Clearance</option>
-                        <option value="Contract of Service">Contract of Service</option>
-                        <option value="CSPRF">CSPRF</option>
-                        <option value="Customer Satisfaction Survey (CSS)">Customer Satisfaction Survey (CSS)</option>
-                        <option value="Daily Time Record (DTR)">Daily Time Record (DTR)</option>
-                        <option value="DA Comms">DA Comms</option>
-                        <option value="DA Memo">DA Memo</option>
-                        <option value="DA SO">DA SO</option>
-                        <option value="Demand Letter">Demand Letter</option>
-                        <option value="Disbursement Voucher (DV)">Disbursement Voucher (DV)</option>
-                        <option value="Document Registration/ Revision Form(DRR)">Document Registration/ Revision Form(DRR)</option>
-                        <option value="Endorsement">Endorsement</option>
-                        <option value="Financial Accomplishment Report (FAR)">Financial Accomplishment Report (FAR)</option>
-                        <option value="FOI Request">FOI Request</option>
-                        <option value="Incident Report (IR)">Incident Report (IR)</option>
-                        <option value="ITR">ITR</option>
-                        <option value="Leave Application">Leave Application</option>
-                        <option value="Letter">Letter</option>
-                        <option value="LDDAP-ADA">LDDAP-ADA</option>
-                        <option value="Memorandum of Agreement (MOA, MOU)">Memorandum of Agreement (MOA, MOU)</option>
-                        <option value="Minutes of Meeting (MoM)">Minutes of Meeting (MoM)</option>
-                        <option value="Modification Advice Form (MAF)">Modification Advice Form (MAF)</option>
-                        <option value="Notice of Award">Notice of Award</option>
-                        <option value="Notice of Finality of Decision (NFD)">Notice of Finality of Decision (NFD)</option>
-                        <option value="Notice of Salary Adjustment (NOSA)">Notice of Salary Adjustment (NOSA)</option>
-                        <option value="Notice of Step Increment (NOSI)">Notice of Step Increment (NOSI)</option>
-                        <option value="Obligation (ORS)">Obligation (ORS)</option>
-                        <option value="Overtime Request">Overtime Request</option>
-                        <option value="PAR">PAR</option>
-                        <option value="PCC Letter">PCC Letter</option>
-                        <option value="PCC MEMO">PCC MEMO</option>
-                        <option value="PCC RC Letter">PCC RC Letter</option>
-                        <option value="PCC SO">PCC SO</option>
-                        <option value="Performance and Commitment Review (PCR)">Performance and Commitment Review (PCR)</option>
-                        <option value="PPMP">PPMP</option>
-                        <option value="Program of Works (POW)">Program of Works (POW)</option>
-                        <option value="Project Proposal">Project Proposal</option>
-                        <option value="Purchase Order (PO)">Purchase Order (PO)</option>
-                        <option value="Purchase Request PR">Purchase Request PR</option>
-                        <option value="PTR">PTR</option>
-                        <option value="Revised Activity Proposal">Revised Activity Proposal</option>
-                        <option value="Report">Report</option>
-                        <option value="Research Proposal">Research Proposal</option>
-                        <option value="Resolution">Resolution</option>
-                        <option value="Statement of Account (SOA)">Statement of Account (SOA)</option>
-                        <option value="Training Request">Training Request</option>
-                        <option value="Transmittal">Transmittal</option>
-                        <option value="Travel Order">Travel Order</option>
-                        <option value="Travel Report">Travel Report</option>
-                        <option value="Trip Ticket">Trip Ticket</option>
-                    </select>
-                </div>
+                <!-- Divisions & Users -->
+                @foreach($divisions as $division)
+                    <div class="mb-3 border-b pb-2" x-ref="division{{ $division->id }}">
+                        <div class="flex items-center justify-between">
+                            <div class="font-semibold text-gray-700">{{ $division->name }}</div>
+                            <div>
+                                <input type="checkbox" x-model="divisionSelect[{{ $division->id }}]"
+                                       @change="$refs['division{{ $division->id }}'].querySelectorAll('input.user-checkbox').forEach(cb => cb.checked = divisionSelect[{{ $division->id }}]);
+                                                selectAll = Object.values(divisionSelect).every(v => v)"
+                                       class="mr-2">
+                                <label class="text-gray-700 text-sm">Select All</label>
+                            </div>
+                        </div>
 
-                <!-- Particulars -->
-                <div>
-                    <label class="block text-sm font-medium mb-1">Particulars</label>
-                    <input type="text" name="particulars" class="w-full border rounded p-2 text-sm" required>
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="flex justify-end gap-2 mt-8">
-                <button type="button" @click="open = false; stopTimer()" class="bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded hover:bg-gray-400">
-                    Cancel
-                </button>
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
-                    Submit
-                </button>
-            </div>
-        </form>
+                        <div class="ml-4 mt-1 space-y-1">
+                            @foreach($division->users as $user)
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="users[]" value="{{ $user->id }}"
+                                           class="user-checkbox mr-2"
+                                           @change="divisionSelect[{{ $division->id }}] = Array.from($refs['division{{ $division->id }}'].querySelectorAll('input.user-checkbox')).every(cb => cb.checked);
+                                                    selectAll = Object.values(divisionSelect).every(v => v);">
+                                    <label class="text-gray-700">{{ $user->name }} ({{ $user->email }})</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+                <!-- Footer -->
+        <div class="p-4 border-t flex justify-end gap-2 shrink-0">
+            <button type="button" @click="open = false; stopTimer()"
+                    class="bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded hover:bg-gray-400">
+                Cancel
+            </button>
+            <button type="submit" form="documentForm"
+                    class="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
+                Submit
+            </button>
+        </div>
+            </form>
+        </div>
     </div>
 </div>

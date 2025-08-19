@@ -45,4 +45,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function divisions()
+    {
+        return $this->belongsToMany(Division::class, 'division_user'); // pivot table
+    }
+
+    public function documents()
+    {
+        return $this->belongsToMany(Document::class, 'document_user', 'user_id', 'document_id');
+    }
 }

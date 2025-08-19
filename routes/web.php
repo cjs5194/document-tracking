@@ -49,6 +49,8 @@ Route::middleware(['auth', 'role:users|oed|records'])->group(function () {
         ->name('documents.markCompleted');
     Route::post('/documents/{id}/forwarded-to-oed', [DocumentController::class, 'markForwardedToOED'])
         ->name('documents.forwarded_to_oed');
+    Route::post('/documents/{document}/send', [DocumentController::class, 'sendToUsers'])->name('documents.send');
+
 });
 
 // -----------------------------

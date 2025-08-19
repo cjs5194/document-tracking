@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Division;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(AdminUserSeeder::class);
         $this->call(PermissionsSeeder::class);
+        $this->call(DivisionSeeder::class);
     }
 
 

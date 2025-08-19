@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Division;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
@@ -12,16 +13,26 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('roles')->paginate(10);
+        $users = User::with('roles', 'divisions')->paginate(10); // eager load divisions
         $roles = Role::all();
+        $divisions = Division::all(); // fetch all divisions
 
-        return view('admin.users.index', compact('users', 'roles'));
+        return view('admin.users.index', compact('users', 'roles', 'divisions'));
+    }
+
+    public function show(User $user)
+    {
+        $roles = $user->roles;
+        $divisions = $user->divisions; // if you want to show divisions too
+        return view('admin.users.show', compact('user', 'roles', 'divisions'));
     }
 
     public function create()
     {
         $roles = Role::all();
-        return view('admin.users.create', compact('roles'));
+        $divisions = Division::all();
+
+        return view('admin.users.create', compact('roles', 'divisions'));
     }
 
     public function store(Request $request)
@@ -32,6 +43,8 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,id',
+            'divisions' => 'nullable|array',
+            'divisions.*' => 'exists:divisions,id',
         ]);
 
         $user = User::create([
@@ -40,55 +53,56 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
+        // Assign roles
         if ($request->has('roles')) {
             $roleNames = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
             $user->assignRole($roleNames);
         }
 
-        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
-    }
+        // Assign divisions
+        if ($request->has('divisions')) {
+            $user->divisions()->sync($request->divisions);
+        }
 
-    public function show(User $user)
-    {
-        $roles = $user->roles;
-        return view('admin.users.show', compact('user', 'roles'));
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
     public function edit(User $user)
     {
         $roles = Role::all();
         $assignedRoles = $user->roles->pluck('id')->toArray();
-        return view('admin.users.edit', compact('user', 'roles', 'assignedRoles'));
+        $divisions = Division::all();
+
+        return view('admin.users.edit', compact('user', 'roles', 'assignedRoles', 'divisions'));
     }
 
     public function update(Request $request, User $user)
     {
-        // Validate incoming request
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
             'roles' => 'nullable|array',
-            'roles.*' => 'exists:roles,id', // Validate role IDs
+            'roles.*' => 'exists:roles,id',
+            'divisions' => 'nullable|array',
+            'divisions.*' => 'exists:divisions,id',
         ]);
 
-        // Update user details
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password ? bcrypt($request->password) : $user->password,
         ]);
 
-        // Map role IDs to role names
-        $roleIds = $request->roles;
-        $validRoleNames = Role::whereIn('id', $roleIds)->pluck('name')->toArray();
+        // Sync roles
+        $roleNames = $request->roles ? Role::whereIn('id', $request->roles)->pluck('name')->toArray() : [];
+        $user->syncRoles($roleNames);
 
-        // Sync roles by name
-        $user->syncRoles($validRoleNames);
+        // Sync divisions
+        $user->divisions()->sync($request->divisions ?? []);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
-
 
     public function destroy(User $user)
     {

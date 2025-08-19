@@ -47,4 +47,9 @@ class Document extends Model
     {
         return $this->hasMany(DocumentLog::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'document_user', 'document_id', 'user_id');
+    }
 }

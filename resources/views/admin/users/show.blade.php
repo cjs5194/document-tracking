@@ -23,6 +23,19 @@
             @endif
         </div>
 
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Divisions</h2>
+            @if($user->divisions->isEmpty())
+                <p class="mt-2 text-gray-600 dark:text-gray-400">No divisions assigned.</p>
+            @else
+                <ul class="list-disc list-inside mt-2 text-gray-600 dark:text-gray-400">
+                    @foreach($user->divisions as $division)
+                        <li>{{ $division->name }}</li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
+
         <div class="flex items-center justify-between mt-4">
             <a href="{{ route('admin.users.index') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                 Back to Users List

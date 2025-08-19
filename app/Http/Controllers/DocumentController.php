@@ -6,101 +6,123 @@ use App\Models\Document;
 use App\Models\DocumentLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Division;
 
 class DocumentController extends Controller
 {
-    // Display a listing of documents
     public function index(Request $request)
-    {
-        $perPage = $request->input('perPage', 10); // default 10
+{
+    $perPage = $request->input('perPage', 10); // default 10
 
-        $query = Document::query();
+    $query = Document::query();
 
-        // ✅ Filter by card click (status)
-        if ($request->filled('status') && $request->status !== 'all') {
-            if ($request->status === 'no-status') {
-                $query->whereNull('oed_status');
-            } else {
-                $query->where('oed_status', $request->status);
-            }
-        }
-
-        // ✅ Filter by document type if provided
-        if ($request->filled('document_type')) {
-            $query->where('document_type', $request->document_type);
-        }
-
-        // ✅ Filter by OED Level if provided
-        if ($request->filled('oed_received')) {
-            if ($request->oed_received === 'Received') {
-                $query->where('oed_received', 'Received');
-            } elseif ($request->oed_received === 'Not yet received') {
-                $query->whereNull('oed_received')
-                    ->orWhere('oed_received', '!=', 'Received');
-            }
-        }
-
-        // ✅ Filter by OED Status
-        if ($request->filled('oed_status')) {
-            if ($request->oed_status === 'null') {
-                $query->whereNull('oed_status');
-            } else {
-                $query->where('oed_status', $request->oed_status);
-            }
-        }
-
-        // ✅ Filter by Record Section (records_received)
-        if ($request->filled('records_received')) {
-            if ($request->records_received === 'Received') {
-                $query->where('records_received', 'Received');
-            } elseif ($request->records_received === 'Not yet received') {
-                $query->where(function ($q) {
-                    $q->whereNull('records_received')
-                    ->orWhere('records_received', '!=', 'Received');
-                });
-            }
-        }
-
-        // ✅ Filter by Completed
-        if ($request->filled('completed')) {
-            if ($request->completed === 'Completed') {
-                $query->whereNotNull('completed_at');
-            } elseif ($request->completed === 'Not yet completed') {
-                $query->whereNull('completed_at');
-            }
-        }
-
-        $documents = $query->orderBy('created_at', 'desc')
-            ->paginate($perPage)
-            ->appends([
-                'perPage' => $perPage,
-                'status' => $request->status,
-                'document_type' => $request->document_type,
-                'oed_received' => $request->oed_received,
-                'oed_status' => $request->oed_status,
-                'records_received' => $request->records_received,
-                'completed' => $request->completed,
-            ]);
-
-        // ✅ Real counts for cards (ignore pagination)
-        $allCount         = Document::count();
-        $inProgressCount  = Document::where('oed_status', 'In Progress')->count();
-        $underReviewCount = Document::where('oed_status', 'Under Review')->count();
-        $forReleaseCount  = Document::where('oed_status', 'For Release')->count();
-        $returnedCount    = Document::where('oed_status', 'Returned')->count();
-        $noStatusCount    = Document::whereNull('oed_status')->count();
-
-        return view('documents.index', compact(
-            'documents',
-            'perPage',
-            'allCount',
-            'inProgressCount',
-            'underReviewCount',
-            'forReleaseCount',
-            'returnedCount',
-            'noStatusCount'
-        ));
+    // ===============================
+    // Role-based filtering
+    // ===============================
+    if (!auth()->user()->hasAnyRole(['admin', 'oed', 'records'])) {
+        // For 'user' role, only show documents assigned to them
+        $query->whereHas('users', function ($q) {
+            $q->where('users.id', auth()->id());
+        });
     }
+
+    // ===============================
+    // Filters
+    // ===============================
+    if ($request->filled('status') && $request->status !== 'all') {
+        if ($request->status === 'no-status') {
+            $query->whereNull('oed_status');
+        } else {
+            $query->where('oed_status', $request->status);
+        }
+    }
+
+    if ($request->filled('document_type')) {
+        $query->where('document_type', $request->document_type);
+    }
+
+    if ($request->filled('oed_received')) {
+        if ($request->oed_received === 'Received') {
+            $query->where('oed_received', 'Received');
+        } elseif ($request->oed_received === 'Not yet received') {
+            $query->whereNull('oed_received')
+                  ->orWhere('oed_received', '!=', 'Received');
+        }
+    }
+
+    if ($request->filled('oed_status')) {
+        if ($request->oed_status === 'null') {
+            $query->whereNull('oed_status');
+        } else {
+            $query->where('oed_status', $request->oed_status);
+        }
+    }
+
+    if ($request->filled('records_received')) {
+        if ($request->records_received === 'Received') {
+            $query->where('records_received', 'Received');
+        } elseif ($request->records_received === 'Not yet received') {
+            $query->where(function ($q) {
+                $q->whereNull('records_received')
+                  ->orWhere('records_received', '!=', 'Received');
+            });
+        }
+    }
+
+    if ($request->filled('completed')) {
+        if ($request->completed === 'Completed') {
+            $query->whereNotNull('completed_at');
+        } elseif ($request->completed === 'Not yet completed') {
+            $query->whereNull('completed_at');
+        }
+    }
+
+    // ===============================
+    // Pagination
+    // ===============================
+    $documents = $query->orderBy('created_at', 'desc')
+                       ->paginate($perPage)
+                       ->appends($request->only([
+                           'perPage', 'status', 'document_type', 'oed_received',
+                           'oed_status', 'records_received', 'completed'
+                       ]));
+
+    // ===============================
+    // Include divisions with users for modal
+    // ===============================
+    $divisions = Division::with('users')->get();
+
+    // ===============================
+    // Counts for cards
+    // ===============================
+    $countQuery = Document::query();
+
+    // Apply the same user role filter
+    if (!auth()->user()->hasAnyRole(['admin', 'oed', 'records'])) {
+        $countQuery->whereHas('users', function ($q) {
+            $q->where('users.id', auth()->id());
+        });
+    }
+
+    $allCount = $countQuery->count();
+    $inProgressCount  = (clone $countQuery)->where('oed_status', 'In Progress')->count();
+    $underReviewCount = (clone $countQuery)->where('oed_status', 'Under Review')->count();
+    $forReleaseCount  = (clone $countQuery)->where('oed_status', 'For Release')->count();
+    $returnedCount    = (clone $countQuery)->where('oed_status', 'Returned')->count();
+    $noStatusCount    = (clone $countQuery)->whereNull('oed_status')->count();
+
+    return view('documents.index', compact(
+        'documents',
+        'perPage',
+        'allCount',
+        'inProgressCount',
+        'underReviewCount',
+        'forReleaseCount',
+        'returnedCount',
+        'noStatusCount',
+        'divisions'
+    ));
+}
 
     // Show the form for creating a new document
     public function create()
@@ -123,9 +145,27 @@ class DocumentController extends Controller
             'records_received' => 'nullable|string|max:255',
             'records_date_received' => 'nullable|date',
             'records_remarks' => 'nullable|string|max:255',
+            'users' => 'nullable|array',    // ✅ handle users from checkboxes
+            'users.*' => 'exists:users,id',
         ]);
 
-        Document::create($request->all());
+        // ✅ Create the document (exclude users field)
+        $document = Document::create($request->except('users'));
+
+        // ✅ Attach users to pivot if selected
+        if ($request->filled('users')) {
+            $document->users()->sync($request->users); // sync avoids duplicate rows
+
+            // Optional: log sending to each user
+            foreach ($request->users as $userId) {
+                DocumentLog::create([
+                    'document_id' => $document->id,
+                    'changed_by' => Auth::user()->name,
+                    'type' => 'send',
+                    'status' => "Sent to user_id: $userId",
+                ]);
+            }
+        }
 
         return Auth::user()->hasRole('admin')
             ? redirect()->route('admin.documents.index')->with('success', 'Document created successfully.')
@@ -307,4 +347,28 @@ class DocumentController extends Controller
 
         return back()->with('success', 'Document forwarded to Records successfully.');
     }
+
+    // public function sendToUsers(Request $request, Document $document)
+    // {
+    //     $request->validate([
+    //         'users' => 'required|array',
+    //         'users.*' => 'exists:users,id',
+    //     ]);
+
+    //     // Attach users without detaching existing ones
+    //     $document->users()->syncWithoutDetaching($request->users);
+
+    //     // Optional: Log who sent to which users
+    //     foreach ($request->users as $userId) {
+    //         DocumentLog::create([
+    //             'document_id' => $document->id,
+    //             'changed_by' => Auth::user()->name,
+    //             'type' => 'send',
+    //             'status' => "Sent to user_id: $userId",
+    //         ]);
+    //     }
+
+    //     return redirect()->back()->with('success', 'Document sent successfully.');
+    // }
+
 }
