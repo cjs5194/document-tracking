@@ -105,7 +105,7 @@
         </div>
 
         <!-- Documents Table -->
-        <div class="overflow-hidden rounded-lg shadow-md border border-gray-200 mt-4">
+        <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 mt-4">
             <table class="min-w-full bg-white text-sm border-collapse">
                 <thead>
                     <!-- Wrap in a single Alpine scope so both modals share the same state -->
@@ -460,8 +460,8 @@
                 </tbody>
                 <tfoot class="bg-gray-50">
                     <tr>
-                        <td colspan="12" class="px-6 py-3">
-                            <div class="flex justify-end items-center space-x-4">
+                        <td colspan="15" class="px-6 py-3">
+                            <div class="flex justify-end items-center space-x-4 w-full">
                                 {{-- Items per page --}}
                                 <form method="GET" action="{{ url()->current() }}" class="flex items-center">
                                     <label for="perPage" class="mr-2 text-sm text-gray-700">Items per page:</label>

@@ -135,7 +135,7 @@ class DocumentController extends Controller
     {
         $request->validate([
             'date_received' => 'required|date',
-            'document_no' => 'required|string|max:255',
+            'document_no' => 'required|string|max:255|unique:documents,document_no',
             'document_type' => 'required|string|max:255',
             'particulars' => 'required|string|max:255',
             'oed_received' => 'nullable|string|max:255',
@@ -145,7 +145,7 @@ class DocumentController extends Controller
             'records_received' => 'nullable|string|max:255',
             'records_date_received' => 'nullable|date',
             'records_remarks' => 'nullable|string|max:255',
-            'users' => 'nullable|array',    // ✅ handle users from checkboxes
+            'users' => 'required|array|min:1',    // ✅ handle users from checkboxes
             'users.*' => 'exists:users,id',
         ]);
 
@@ -189,7 +189,7 @@ class DocumentController extends Controller
     {
         $request->validate([
             'date_received' => 'required|date',
-            'document_no' => 'required|string|max:255',
+            'document_no' => 'required|string|max:255|unique:documents,document_no,' . $document->id,
             'document_type' => 'required|string|max:255',
             'particulars' => 'required|string|max:255',
             'oed_received' => 'nullable|string|max:255',
