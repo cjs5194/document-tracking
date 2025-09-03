@@ -4,7 +4,7 @@
     x-cloak
     class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30"
     @keydown.escape.window="filterOpen = false"
-    @click.away="filterOpen = true"
+    @click.away="filterOpen = false"
 >
     <!-- Modal Wrapper -->
     <div

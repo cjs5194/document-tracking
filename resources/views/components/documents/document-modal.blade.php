@@ -19,7 +19,7 @@
     }"
     x-show="open"
     x-cloak
-    class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30"
+    class="fixed inset-0 z-50 flex items-start justify-center backdrop-blur-sm bg-white/30 pt-10"
     @keydown.escape.window="open = false; stopTimer()"
     @open-modal.window="
         if ($event.detail === 'document-submission') {
@@ -39,7 +39,7 @@
         </div>
 
         <!-- Scrollable Content -->
-        <div class="p-4 flex-1 overflow-y-auto">
+        <div class="p-4 flex-1 overflow-y-visible">
             <form id="documentForm"
                   action="{{ auth()->user()->hasRole('admin') ? route('admin.documents.store') : route('documents.store') }}"
                   method="POST"
@@ -180,7 +180,7 @@
                                                     "
                                                     {{ (is_array(old('users')) && in_array($user->id, old('users'))) ? 'checked' : '' }}
                                                 >
-                                                <label class="text-gray-700">{{ $user->name }} ({{ $user->email }})</label>
+                                                <label class="text-gray-700">{{ $user->name }}</label>
                                             </div>
                                         @endforeach
                                     </div>

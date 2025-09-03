@@ -223,9 +223,19 @@ class DocumentController extends Controller
         $document->update([
             'oed_date_received' => now(),
             'oed_received' => 'Received',
+            'oed_status' => 'Under Review',
+            'under_review_at' => $document->under_review_at ?? now(),
         ]);
 
-        return redirect()->back()->with('success', 'Document marked as received.');
+        // Log the status change
+        DocumentLog::create([
+            'document_id' => $document->id,
+            'changed_by' => Auth::user()->name,
+            'type' => 'status',
+            'status' => 'Under Review',
+        ]);
+
+        return redirect()->back()->with('success', 'Document marked as received and set to Under Review.');
     }
 
     public function updateOedStatus(Request $request, Document $document)

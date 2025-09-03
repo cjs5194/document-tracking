@@ -145,73 +145,103 @@
                     </div>
 
                     <tr class="bg-gray-100">
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Date Received</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Document #</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Document Type</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Particulars</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">FWD to OED</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Doc Type</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 w-64">Particulars</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FWD to OED</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">OED Level</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Date Received</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Status</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Logs</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Remarks OED</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">FWD to RECORDS</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Records</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Date Received</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Remarks</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Completed</th>
+                        {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th> --}}
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Status</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Logs</th>
+                        {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Remarks OED</th> --}}
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FWD to RECORDS</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Records</th>
+                        {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th> --}}
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Remarks</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Completed</th>
+                        @hasanyrole('admin|records')
+                            <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Action</th>
+                        @endhasanyrole
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($documents as $document)
                         <tr class="border-b border-gray-200 hover:bg-gray-50">
-                            <td class="px-5 py-3">{{ $document->date_received?->format('m/d/Y h:i A') }}</td>
+                            <td class="px-5 py-3 text-sm text-gray-600 whitespace-nowrap">{{ $document->date_received?->format('m/d/Y h:i A') }}</td>
                             <td class="px-5 py-3 whitespace-nowrap">{{ $document->document_no }}</td>
                             <td class="px-5 py-3">{{ $document->document_type }}</td>
-                            <td class="px-5 py-3">{{ $document->particulars }}</td>
+                            <td class="px-5 py-3 w-64">{{ $document->particulars }}</td>
                             <td class="px-4 py-2">
                                 @if(!$document->forwarded_to_oed)
                                     @role('records')
                                         <form action="{{ route('documents.forwarded_to_oed', $document->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="border border-gray-400 text-gray-700 px-3 py-1 rounded hover:bg-gray-100">
+                                            <button type="submit" class="border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
                                                 Delivered
                                             </button>
                                         </form>
                                     @endrole
                                 @else
-                                    <span class="text-sm text-gray-600">
+                                    <span class="text-sm text-gray-600 whitespace-nowrap">
                                         {{ \Carbon\Carbon::parse($document->forwarded_to_oed)->format('m/d/Y h:i A') }}
                                     </span>
                                 @endif
                             </td>
                             <td class="px-5 py-3">
-                                @if ($document->oed_date_received)
-                                    <span class="text-sm font-bold">Received</span>
-                                @else
-                                    @hasrole('oed')
-                                        @if ($document->forwarded_to_oed)
-                                            <div class="relative inline-block text-left" x-data="{ open: false }">
-                                                <button @click="open = !open"
-                                                    class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
-                                                    Action
-                                                </button>
-                                                <div x-show="open" @click.away="open = false" x-cloak
-                                                    class="absolute z-10 mt-2 w-32 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
-                                                    <form action="{{ route('documents.oed.receive.single', $document->id) }}" method="POST">
-                                                        @csrf
-                                                        <button type="submit"
-                                                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                            Mark as Received
-                                                        </button>
-                                                    </form>
-                                                </div>
+                            @if ($document->oed_date_received)
+                                <div x-data="{ show: false, x: null, y: null }" class="relative inline-flex items-center">
+                                    <span
+                                        x-ref="text"
+                                        @mouseenter="
+                                            const r = $refs.text.getBoundingClientRect();
+                                            x = r.left;
+                                            y = r.top + r.height / 2;
+                                            show = true;
+                                        "
+                                        @mouseleave="show = false"
+                                        class="text-sm font-bold cursor-pointer"
+                                    >
+                                        Received
+                                    </span>
+
+                                    <!-- Tooltip -->
+                                    <template x-teleport="body">
+                                        <template x-if="show && x !== null && y !== null">
+                                            <div
+                                                x-transition
+                                                class="fixed z-50 px-2 py-1 text-xs bg-gray-800 text-white rounded shadow pointer-events-none whitespace-nowrap"
+                                                :style="`top:${y}px; left:${x}px; transform: translate(calc(-100% - 8px), -50%);`"
+                                            >
+                                                Received at {{ $document->oed_date_received->format('m/d/Y h:i A') }}
                                             </div>
-                                        @endif
-                                    @endhasrole
-                                @endif
-                            </td>
-                            <td class="px-5 py-3">{{ $document->oed_date_received?->format('m/d/Y h:i A') }}</td>
+                                        </template>
+                                    </template>
+                                </div>
+                            @else
+                                @hasrole('oed')
+                                    @if ($document->forwarded_to_oed)
+                                        <div class="relative inline-block text-left" x-data="{ open: false }">
+                                            <button @click="open = !open"
+                                                class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
+                                                Action
+                                            </button>
+                                            <div x-show="open" @click.away="open = false" x-cloak
+                                                class="absolute z-10 mt-2 w-32 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                                                <form action="{{ route('documents.oed.receive.single', $document->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                        Mark as Received
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endhasrole
+                            @endif
+                        </td>
+                            {{-- <td class="px-5 py-3">{{ $document->oed_date_received?->format('m/d/Y h:i A') }}</td> --}}
                             <td class="px-5 py-3">
                             @hasrole('oed')
                                 @if ($document->oed_date_received)
@@ -225,7 +255,6 @@
                                                 {{ $document->oed_status === 'In Progress' ? 'bg-blue-500' : '' }}
                                                 {{ $document->oed_status === 'For Release' ? 'bg-green-500' : '' }}
                                                 {{ $document->oed_status === 'Returned' ? 'bg-red-500' : '' }}">
-                                            <option value="" disabled {{ is_null($document->oed_status) ? 'selected' : '' }}>Action</option>
                                             <option value="Under Review" {{ $document->oed_status === 'Under Review' ? 'selected' : '' }}>Under Review</option>
                                             <option value="In Progress" {{ $document->oed_status === 'In Progress' ? 'selected' : '' }}>In Progress</option>
                                             <option value="For Release" {{ $document->oed_status === 'For Release' ? 'selected' : '' }}>For Release</option>
@@ -275,7 +304,7 @@
                                 @include('components.documents.status-logs-modal')
                             </div>
                         </td>
-                            <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->oed_remarks }}' }">
+                            {{-- <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->oed_remarks }}' }">
                                 @hasrole('oed')
                                     @if ($document->oed_date_received)
                                         <template x-if="!editing">
@@ -311,10 +340,10 @@
                                 @else
                                     <span>{{ $document->oed_remarks }}</span>
                                 @endhasrole
-                            </td>
+                            </td> --}}
                             <td class="px-5 py-3">
                                 @if ($document->forwarded_to_records)
-                                    <span class="text-xs text-gray-500">
+                                    <span class="text-sm text-gray-600 whitespace-nowrap">
                                         {{ $document->forwarded_to_records->format('m/d/Y h:i A') }}
                                     </span>
                                 @else
@@ -334,7 +363,34 @@
                             </td>
                             <td class="px-5 py-3">
                                 @if ($document->records_received)
-                                    <span class="text-sm font-bold">Received</span>
+                                    <div x-data="{ show: false, x: null, y: null }" class="relative inline-flex items-center">
+                                        <span
+                                            x-ref="text"
+                                            @mouseenter="
+                                                const r = $refs.text.getBoundingClientRect();
+                                                x = r.left;
+                                                y = r.top + r.height / 2;
+                                                show = true;
+                                            "
+                                            @mouseleave="show = false"
+                                            class="text-sm font-bold cursor-pointer"
+                                        >
+                                            Received
+                                        </span>
+
+                                        <!-- Tooltip -->
+                                        <template x-teleport="body">
+                                            <template x-if="show && x !== null && y !== null">
+                                                <div
+                                                    x-transition
+                                                    class="fixed z-50 px-2 py-1 text-xs bg-gray-800 text-white rounded shadow pointer-events-none whitespace-nowrap"
+                                                    :style="`top:${y}px; left:${x}px; transform: translate(calc(-100% - 8px), -50%);`"
+                                                >
+                                                    Received at {{ $document->records_date_received->format('m/d/Y h:i A') }}
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </div>
                                 @else
                                     @hasrole('records')
                                         @if ($document->oed_status === 'For Release' && $document->forwarded_to_records)
@@ -365,10 +421,9 @@
                                     @endhasrole
                                 @endif
                             </td>
-                            <td class="px-5 py-3">{{ $document->records_date_received?->format('m/d/Y h:i A') }}</td>
+                            {{-- <td class="px-5 py-3">{{ $document->records_date_received?->format('m/d/Y h:i A') }}</td> --}}
                             <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->records_remarks }}' }">
                                 @hasrole('records')
-                                    @if ($document->records_date_received || $document->oed_status === 'Returned')
                                         <template x-if="!editing">
                                             <span @click="editing = true" class="cursor-pointer text-blue-600 hover:underline" x-text="remarks || 'Add Remarks'"></span>
                                         </template>
@@ -398,7 +453,6 @@
                                                 </div>
                                             </div>
                                         </template>
-                                    @endif
                                 @else
                                     <span>{{ $document->records_remarks }}</span>
                                 @endhasrole
@@ -451,6 +505,86 @@
                                     @endrole
                                 @endif
                             </td>
+                            @hasanyrole('admin|records')
+                            <td>
+                            <div class="flex items-center justify-center gap-2">
+                                <!-- View Button -->
+                                <div class="relative" x-data="{ tooltip: false }">
+                                    <button
+                                        @click="viewOpen = true"
+                                        @mouseenter="tooltip = true"
+                                        @mouseleave="tooltip = false"
+                                        class="flex items-center justify-center p-2 rounded-full hover:scale-105 transition-transform"
+                                        style="background-color:#1f4b82;"
+                                    >
+                                        <!-- Eye Icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943
+                                                9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+                                    <div x-show="tooltip" x-transition
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1
+                                            text-xs bg-gray-800 text-white rounded whitespace-nowrap">
+                                        View
+                                    </div>
+                                </div>
+
+                                <!-- Update Button -->
+                                <div class="relative" x-data="{ tooltip: false }">
+                                    <button
+                                        @click="updateOpen = true"
+                                        @mouseenter="tooltip = true"
+                                        @mouseleave="tooltip = false"
+                                        class="flex items-center justify-center p-2 rounded-full hover:scale-105 transition-transform"
+                                        style="background-color:#1f4b82;"
+                                    >
+                                        <!-- Document Update Icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0
+                                                012-2h5l5 5v11a2 2 0 01-2 2z"/>
+                                        </svg>
+                                    </button>
+                                    <div x-show="tooltip" x-transition
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1
+                                            text-xs bg-gray-800 text-white rounded whitespace-nowrap">
+                                        Update
+                                    </div>
+                                </div>
+
+                                <!-- Delete Button -->
+                                <div class="relative" x-data="{ tooltip: false }">
+                                    <button
+                                        @click="confirm('Are you sure you want to delete this?')"
+                                        @mouseenter="tooltip = true"
+                                        @mouseleave="tooltip = false"
+                                        class="flex items-center justify-center p-2 rounded-full hover:scale-105 transition-transform"
+                                        style="background-color:#1f4b82;"
+                                    >
+                                        <!-- Trash Icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0
+                                                01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 3h4a1
+                                                1 0 011 1v1H9V4a1 1 0 011-1z"/>
+                                        </svg>
+                                    </button>
+                                    <div x-show="tooltip" x-transition
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1
+                                            text-xs bg-gray-800 text-white rounded whitespace-nowrap">
+                                        Delete
+                                    </div>
+                                </div>
+                            </div>
+                            </td>
+                            @endhasanyrole
                         </tr>
                     @empty
                         <tr>
@@ -460,7 +594,7 @@
                 </tbody>
                 <tfoot class="bg-gray-50">
                     <tr>
-                        <td colspan="15" class="px-6 py-3">
+                        <td colspan="16" class="px-6 py-3">
                             <div class="flex justify-end items-center space-x-4 w-full">
                                 {{-- Items per page --}}
                                 <form method="GET" action="{{ url()->current() }}" class="flex items-center">
