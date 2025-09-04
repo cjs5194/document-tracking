@@ -177,12 +177,24 @@
                             <td class="px-4 py-2">
                                 @if(!$document->forwarded_to_oed)
                                     @role('records')
-                                        <form action="{{ route('documents.forwarded_to_oed', $document->id) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
-                                                Delivered
+                                        <div class="relative inline-block text-left" x-data="{ open: false }">
+                                            <button @click="open = !open"
+                                                class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
+                                                Action
                                             </button>
-                                        </form>
+                                            <div x-show="open" @click.away="open = false" x-cloak
+                                                class="absolute z-10 mt-2 w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+
+                                                <form action="{{ route('documents.forwarded_to_oed', $document->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                        Forwarded to OED
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                        </div>
                                     @endrole
                                 @else
                                     <span class="text-sm text-gray-600 whitespace-nowrap">
@@ -351,14 +363,25 @@
                                 @else
                                     @hasrole('oed')
                                         @if ($document->oed_status === 'For Release')
-                                            <form action="{{ route('documents.forwardToRecords', $document->id) }}" method="POST">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit"
-                                                    class="border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
-                                                    Delivered
+                                            <div class="relative inline-block text-left" x-data="{ open: false }">
+                                                <button @click="open = !open"
+                                                    class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
+                                                    Action
                                                 </button>
-                                            </form>
+                                                <div x-show="open" @click.away="open = false" x-cloak
+                                                    class="absolute z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+
+                                                    <form action="{{ route('documents.forwardToRecords', $document->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit"
+                                                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                            Forwarded to Records
+                                                        </button>
+                                                    </form>
+
+                                                </div>
+                                            </div>
                                         @endif
                                     @endhasrole
                                 @endif
@@ -498,13 +521,25 @@
                                 @else
                                     @role('records')
                                         @if (!is_null($document->records_received))
-                                            <form action="{{ route('documents.markCompleted', $document->id) }}" method="POST">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-100">
-                                                    Completed
+                                            <div class="relative inline-block text-left" x-data="{ open: false }">
+                                                <button @click="open = !open"
+                                                    class="bg-white border border-gray-300 text-xs px-3 py-1 rounded hover:border-gray-400">
+                                                    Action
                                                 </button>
-                                            </form>
+                                                <div x-show="open" @click.away="open = false" x-cloak
+                                                    class="absolute z-10 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+
+                                                    <form action="{{ route('documents.markCompleted', $document->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit"
+                                                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                            Mark as Completed
+                                                        </button>
+                                                    </form>
+
+                                                </div>
+                                            </div>
                                         @endif
                                     @endrole
                                 @endif
