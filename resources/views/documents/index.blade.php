@@ -44,7 +44,8 @@
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-yellow-500">
                         <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="12" cy="12" r="9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 12h8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                     <div class="mx-5">
@@ -86,19 +87,18 @@
                 </div>
             </div>
 
-            <!-- No Status -->
-            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'no-status']) }}'"
+            <!-- Completed -->
+            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['completed' => 'Completed']) }}'"
                 class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
                 <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
                     <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-500">
                         <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <circle cx="12" cy="12" r="9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 12h8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                     <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">{{ $noStatusCount }}</h4>
-                        <div class="text-gray-500">No Status</div>
+                        <h4 class="text-2xl font-semibold text-gray-700">{{ $completedCount }}</h4>
+                        <div class="text-gray-500">Completed</div>
                     </div>
                 </div>
             </div>
@@ -149,7 +149,7 @@
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Document #</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Doc Type</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 w-64">Particulars</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FWD to OED</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FORWARDED to OED</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">OED Level</th>
                         {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th> --}}
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Status</th>
@@ -158,7 +158,9 @@
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FWD to RECORDS</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Records</th>
                         {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th> --}}
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Remarks</th>
+                        @hasanyrole('admin|records|oed')
+                            <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Remarks</th>
+                        @endhasanyrole
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Completed</th>
                         @hasanyrole('admin|records')
                             <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Action</th>
@@ -422,6 +424,7 @@
                                 @endif
                             </td>
                             {{-- <td class="px-5 py-3">{{ $document->records_date_received?->format('m/d/Y h:i A') }}</td> --}}
+                            @hasanyrole('admin|records|oed')
                             <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->records_remarks }}' }">
                                 @hasrole('records')
                                         <template x-if="!editing">
@@ -457,6 +460,7 @@
                                     <span>{{ $document->records_remarks }}</span>
                                 @endhasrole
                             </td>
+                            @endhasanyrole
                             {{-- Completed documents --}}
                             <td class="px-5 py-3 text-xs text-gray-700">
                                 @if ($document->completed_at)
@@ -507,7 +511,7 @@
                             </td>
                             @hasanyrole('admin|records')
                             <td>
-                            <div class="flex items-center justify-center gap-2">
+                            <div class="flex items-center justify-center gap-2 mr-2">
                                 <!-- View Button -->
                                 <div class="relative" x-data="{ tooltip: false }">
                                     <button

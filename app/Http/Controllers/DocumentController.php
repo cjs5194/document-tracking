@@ -110,6 +110,7 @@ class DocumentController extends Controller
     $forReleaseCount  = (clone $countQuery)->where('oed_status', 'For Release')->count();
     $returnedCount    = (clone $countQuery)->where('oed_status', 'Returned')->count();
     $noStatusCount    = (clone $countQuery)->whereNull('oed_status')->count();
+    $completedCount   = (clone $countQuery)->whereNotNull('completed_at')->count();
 
     return view('documents.index', compact(
         'documents',
@@ -120,6 +121,7 @@ class DocumentController extends Controller
         'forReleaseCount',
         'returnedCount',
         'noStatusCount',
+        'completedCount',
         'divisions'
     ));
 }
