@@ -26,6 +26,9 @@ Route::middleware(['auth', 'role:users|oed|records'])->group(function () {
         ->names('documents')
         ->except(['edit', 'update', 'destroy']);
 
+    Route::patch('/documents/{document}', [DocumentController::class, 'update'])
+        ->name('documents.update');
+
     // OED routes
     Route::post('/documents/oed-receive-all', [DocumentController::class, 'markAllOedReceived'])
         ->name('documents.oed.receive.all');

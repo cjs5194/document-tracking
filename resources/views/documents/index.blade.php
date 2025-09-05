@@ -115,7 +115,7 @@
                                 <div class="relative w-full sm:w-auto flex justify-start py-2">
                                     @hasrole('records')
                                     <button
-                                        @click="$dispatch('open-modal', 'document-submission')"
+                                        @click="$dispatch('open-document-modal', { mode: 'create' })"
                                         class="text-gray-800 px-4 py-2 rounded border border-gray-400 hover:border-gray-600"
                                     >
                                         + Add New Document
@@ -584,7 +584,17 @@
                                 <!-- Update Button -->
                                 <div class="relative" x-data="{ tooltip: false }">
                                     <button
-                                        @click="updateOpen = true"
+                                        @click="$dispatch('open-document-modal', {
+                                            mode: 'update',
+                                            action: '{{ route('documents.update', $document->id) }}',
+                                            data: {
+                                                date_received: '{{ $document->date_received }}',
+                                                document_no: '{{ $document->document_no }}',
+                                                document_type: '{{ $document->document_type }}',
+                                                particulars: '{{ $document->particulars }}',
+                                                users: @json($document->users->pluck('id'))
+                                            }
+                                        })"
                                         @mouseenter="tooltip = true"
                                         @mouseleave="tooltip = false"
                                         class="flex items-center justify-center p-2 rounded-full hover:scale-105 transition-transform"
@@ -598,6 +608,7 @@
                                                 012-2h5l5 5v11a2 2 0 01-2 2z"/>
                                         </svg>
                                     </button>
+
                                     <div x-show="tooltip" x-transition
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1
                                             text-xs bg-gray-800 text-white rounded whitespace-nowrap">
