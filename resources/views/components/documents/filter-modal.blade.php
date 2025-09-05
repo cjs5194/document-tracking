@@ -30,7 +30,7 @@
                         <option value="Audit Itinerary">Audit Itinerary</option>
                         <option value="Audit Observation Memorandum (AOM)">Audit Observation Memorandum (AOM)</option>
                         <option value="Bid Documents">Bid Documents</option>
-                        <option value="Certificate (Appreciation, Attendance, etc..)">Certificate (Appreciation, Attendance, etc..)</option>
+                        <option value="Certificate">Certificate (Appreciation, Attendance, etc..)</option>
                         <option value="Certification">Certification</option>
                         <option value="Clearance">Clearance</option>
                         <option value="Contract of Service">Contract of Service</option>

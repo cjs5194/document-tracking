@@ -53,6 +53,12 @@ Route::middleware(['auth', 'role:users|oed|records'])->group(function () {
 
 });
 
+// ✅ Separate group for delete (admin + records only)
+Route::middleware(['auth', 'role:admin|records'])->group(function () {
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])
+        ->name('documents.destroy');
+});
+
 // -----------------------------
 // Admin-only routes
 // -----------------------------

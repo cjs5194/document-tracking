@@ -550,28 +550,36 @@
                                 <!-- View Button -->
                                 <div class="relative" x-data="{ tooltip: false }">
                                     <button
-                                        @click="viewOpen = true"
-                                        @mouseenter="tooltip = true"
-                                        @mouseleave="tooltip = false"
-                                        class="flex items-center justify-center p-2 rounded-full hover:scale-105 transition-transform"
-                                        style="background-color:#1f4b82;"
-                                    >
-                                        <!-- Eye Icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943
-                                                9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                        </svg>
-                                    </button>
+                                    @click="$dispatch('open-view-modal', {
+                                        doc: {
+                                            date_received: '{{ optional($document->date_received)->format('m/d/Y h:i A') }}',
+                                            document_no: @js($document->document_no),
+                                            document_type: @js($document->document_type),
+                                            particulars: @js($document->particulars),
+                                            users: @js($document->users->pluck('name')) // from pivot
+                                        }
+                                    })"
+                                    class="flex items-center justify-center p-2 rounded-full hover:scale-105 transition-transform"
+                                    style="background-color:#1f4b82;"
+                                >
+                                    <!-- keep your eye icon EXACTLY as-is -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943
+                                            9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
                                     <div x-show="tooltip" x-transition
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1
                                             text-xs bg-gray-800 text-white rounded whitespace-nowrap">
                                         View
                                     </div>
                                 </div>
+
+                                @include('components.documents.view-modal')
 
                                 <!-- Update Button -->
                                 <div class="relative" x-data="{ tooltip: false }">
@@ -600,7 +608,7 @@
                                 <!-- Delete Button -->
                                 <div class="relative" x-data="{ tooltip: false }">
                                     <button
-                                        @click="confirm('Are you sure you want to delete this?')"
+                                         @click="$dispatch('open-delete-modal', '{{ route('documents.destroy', $document->id) }}')"
                                         @mouseenter="tooltip = true"
                                         @mouseleave="tooltip = false"
                                         class="flex items-center justify-center p-2 rounded-full hover:scale-105 transition-transform"
@@ -658,3 +666,35 @@
         </div>
     </div>
 </x-admin-layout>
+
+<!-- Delete Modal -->
+<div x-data="{ open: false, deleteUrl: '' }"
+     @open-delete-modal.window="deleteUrl = $event.detail; open = true">
+
+    <div x-show="open" x-cloak
+         class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
+        <div @click.away="open = false"
+             class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white text-center">
+                Are you sure you want to delete this document?
+            </h2>
+
+            <form :action="deleteUrl" method="POST" class="mt-4">
+                @csrf
+                @method('DELETE')
+                <div class="flex justify-center space-x-4">
+                    <button type="button"
+                            @click="open = false"
+                            class="py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-500 focus:outline-none">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700">
+                        Yes, Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

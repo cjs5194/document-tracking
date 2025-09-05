@@ -76,17 +76,67 @@
                         <label class="block text-sm font-medium mb-1">Document Type</label>
                         <select name="document_type" class="w-full border rounded p-2 text-sm" required>
                             <option value="" disabled {{ old('document_type') ? '' : 'selected' }}>Select type</option>
-                            <option value="TOR" {{ old('document_type')=='TOR' ? 'selected' : '' }}>TOR</option>
-                            <option value="Memorandum" {{ old('document_type')=='Memorandum' ? 'selected' : '' }}>Memorandum</option>
+                            <option value="ACIC" {{ old('document_type')=='ACIC' ? 'selected' : '' }}>ACIC</option>
+                            <option value="Accomplishment Report" {{ old('document_type')=='Accomplishment Report' ? 'selected' : '' }}>Accomplishment Report</option>
+                            <option value="Activity Proposal" {{ old('document_type')=='Activity Proposal' ? 'selected' : '' }}>Activity Proposal</option>
+                            <option value="Advisory" {{ old('document_type')=='Advisory' ? 'selected' : '' }}>Advisory</option>
+                            <option value="APP" {{ old('document_type')=='APP' ? 'selected' : '' }}>APP</option>
+                            <option value="Authority to Release (ATR)" {{ old('document_type')=='Authority to Release (ATR)' ? 'selected' : '' }}>Authority to Release (ATR)</option>
+                            <option value="Audit Itinerary" {{ old('document_type')=='Audit Itinerary' ? 'selected' : '' }}>Audit Itinerary</option>
+                            <option value="Audit Observation Memorandum (AOM)" {{ old('document_type')=='Audit Observation Memorandum (AOM)' ? 'selected' : '' }}>Audit Observation Memorandum (AOM)</option>
+                            <option value="Bid Documents" {{ old('document_type')=='Bid Documents' ? 'selected' : '' }}>Bid Documents</option>
+                            <option value="Certificate" {{ old('document_type')=='Certificate' ? 'selected' : '' }}>Certificate (Appreciation, Attendance, etc..)</option>
+                            <option value="Certification" {{ old('document_type')=='Certification' ? 'selected' : '' }}>Certification</option>
+                            <option value="Clearance" {{ old('document_type')=='Clearance' ? 'selected' : '' }}>Clearance</option>
+                            <option value="Contract of Service" {{ old('document_type')=='Contract of Service' ? 'selected' : '' }}>Contract of Service</option>
+                            <option value="CSPRF" {{ old('document_type')=='CSPRF' ? 'selected' : '' }}>CSPRF</option>
+                            <option value="Customer Satisfaction Survey (CSS)" {{ old('document_type')=='Customer Satisfaction Survey (CSS)' ? 'selected' : '' }}>Customer Satisfaction Survey (CSS)</option>
+                            <option value="Daily Time Record (DTR)" {{ old('document_type')=='Daily Time Record (DTR)' ? 'selected' : '' }}>Daily Time Record (DTR)</option>
+                            <option value="DA Comms" {{ old('document_type')=='DA Comms' ? 'selected' : '' }}>DA Comms</option>
+                            <option value="DA Memo" {{ old('document_type')=='DA Memo' ? 'selected' : '' }}>DA Memo</option>
+                            <option value="DA SO" {{ old('document_type')=='DA SO' ? 'selected' : '' }}>DA SO</option>
+                            <option value="Demand Letter" {{ old('document_type')=='Demand Letter' ? 'selected' : '' }}>Demand Letter</option>
+                            <option value="Disbursement Voucher (DV)" {{ old('document_type')=='Disbursement Voucher (DV)' ? 'selected' : '' }}>Disbursement Voucher (DV)</option>
+                            <option value="Document Registration/ Revision Form(DRR)" {{ old('document_type')=='Document Registration/ Revision Form(DRR)' ? 'selected' : '' }}>Document Registration/ Revision Form(DRR)</option>
                             <option value="Endorsement" {{ old('document_type')=='Endorsement' ? 'selected' : '' }}>Endorsement</option>
-                            <option value="Communications" {{ old('document_type')=='Communications' ? 'selected' : '' }}>Communications</option>
-                            <option value="Purchase Request" {{ old('document_type')=='Purchase Request' ? 'selected' : '' }}>Purchase Request</option>
-                            <option value="Purchase Order" {{ old('document_type')=='Purchase Order' ? 'selected' : '' }}>Purchase Order</option>
+                            <option value="Financial Accomplishment Report (FAR)" {{ old('document_type')=='Financial Accomplishment Report (FAR)' ? 'selected' : '' }}>Financial Accomplishment Report (FAR)</option>
+                            <option value="FOI Request" {{ old('document_type')=='FOI Request' ? 'selected' : '' }}>FOI Request</option>
+                            <option value="Incident Report (IR)" {{ old('document_type')=='Incident Report (IR)' ? 'selected' : '' }}>Incident Report (IR)</option>
+                            <option value="ITR" {{ old('document_type')=='ITR' ? 'selected' : '' }}>ITR</option>
+                            <option value="Leave Application" {{ old('document_type')=='Leave Application' ? 'selected' : '' }}>Leave Application</option>
+                            <option value="Letter" {{ old('document_type')=='Letter' ? 'selected' : '' }}>Letter</option>
+                            <option value="LDDAP-ADA" {{ old('document_type')=='LDDAP-ADA' ? 'selected' : '' }}>LDDAP-ADA</option>
+                            <option value="Memorandum of Agreement (MOA, MOU)" {{ old('document_type')=='Memorandum of Agreement (MOA, MOU)' ? 'selected' : '' }}>Memorandum of Agreement (MOA, MOU)</option>
+                            <option value="Minutes of Meeting (MoM)" {{ old('document_type')=='Minutes of Meeting (MoM)' ? 'selected' : '' }}>Minutes of Meeting (MoM)</option>
+                            <option value="Modification Advice Form (MAF)" {{ old('document_type')=='Modification Advice Form (MAF)' ? 'selected' : '' }}>Modification Advice Form (MAF)</option>
+                            <option value="Notice of Award" {{ old('document_type')=='Notice of Award' ? 'selected' : '' }}>Notice of Award</option>
+                            <option value="Notice of Finality of Decision (NFD)" {{ old('document_type')=='Notice of Finality of Decision (NFD)' ? 'selected' : '' }}>Notice of Finality of Decision (NFD)</option>
+                            <option value="Notice of Salary Adjustment (NOSA)" {{ old('document_type')=='Notice of Salary Adjustment (NOSA)' ? 'selected' : '' }}>Notice of Salary Adjustment (NOSA)</option>
+                            <option value="Notice of Step Increment (NOSI)" {{ old('document_type')=='Notice of Step Increment (NOSI)' ? 'selected' : '' }}>Notice of Step Increment (NOSI)</option>
+                            <option value="Obligation (ORS)" {{ old('document_type')=='Obligation (ORS)' ? 'selected' : '' }}>Obligation (ORS)</option>
+                            <option value="Overtime Request" {{ old('document_type')=='Overtime Request' ? 'selected' : '' }}>Overtime Request</option>
+                            <option value="PAR" {{ old('document_type')=='PAR' ? 'selected' : '' }}>PAR</option>
+                            <option value="PCC Letter" {{ old('document_type')=='PCC Letter' ? 'selected' : '' }}>PCC Letter</option>
+                            <option value="PCC MEMO" {{ old('document_type')=='PCC MEMO' ? 'selected' : '' }}>PCC MEMO</option>
+                            <option value="PCC RC Letter" {{ old('document_type')=='PCC RC Letter' ? 'selected' : '' }}>PCC RC Letter</option>
+                            <option value="PCC SO" {{ old('document_type')=='PCC SO' ? 'selected' : '' }}>PCC SO</option>
+                            <option value="Performance and Commitment Review (PCR)" {{ old('document_type')=='Performance and Commitment Review (PCR)' ? 'selected' : '' }}>Performance and Commitment Review (PCR)</option>
+                            <option value="PPMP" {{ old('document_type')=='PPMP' ? 'selected' : '' }}>PPMP</option>
+                            <option value="Program of Works (POW)" {{ old('document_type')=='Program of Works (POW)' ? 'selected' : '' }}>Program of Works (POW)</option>
+                            <option value="Project Proposal" {{ old('document_type')=='Project Proposal' ? 'selected' : '' }}>Project Proposal</option>
+                            <option value="Purchase Order (PO)" {{ old('document_type')=='Purchase Order (PO)' ? 'selected' : '' }}>Purchase Order (PO)</option>
+                            <option value="Purchase Request PR" {{ old('document_type')=='Purchase Request PR' ? 'selected' : '' }}>Purchase Request PR</option>
+                            <option value="PTR" {{ old('document_type')=='PTR' ? 'selected' : '' }}>PTR</option>
+                            <option value="Revised Activity Proposal" {{ old('document_type')=='Revised Activity Proposal' ? 'selected' : '' }}>Revised Activity Proposal</option>
+                            <option value="Report" {{ old('document_type')=='Report' ? 'selected' : '' }}>Report</option>
+                            <option value="Research Proposal" {{ old('document_type')=='Research Proposal' ? 'selected' : '' }}>Research Proposal</option>
                             <option value="Resolution" {{ old('document_type')=='Resolution' ? 'selected' : '' }}>Resolution</option>
-                            <option value="Voucher" {{ old('document_type')=='Voucher' ? 'selected' : '' }}>Voucher</option>
+                            <option value="Statement of Account (SOA)" {{ old('document_type')=='Statement of Account (SOA)' ? 'selected' : '' }}>Statement of Account (SOA)</option>
+                            <option value="Training Request" {{ old('document_type')=='Training Request' ? 'selected' : '' }}>Training Request</option>
+                            <option value="Transmittal" {{ old('document_type')=='Transmittal' ? 'selected' : '' }}>Transmittal</option>
                             <option value="Travel Order" {{ old('document_type')=='Travel Order' ? 'selected' : '' }}>Travel Order</option>
-                            <option value="Payroll" {{ old('document_type')=='Payroll' ? 'selected' : '' }}>Payroll</option>
-                            <option value="Certificate" {{ old('document_type')=='Certificate' ? 'selected' : '' }}>Certificate</option>
+                            <option value="Travel Report" {{ old('document_type')=='Travel Report' ? 'selected' : '' }}>Travel Report</option>
+                            <option value="Trip Ticket" {{ old('document_type')=='Trip Ticket' ? 'selected' : '' }}>Trip Ticket</option>
                         </select>
                         @error('document_type')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
