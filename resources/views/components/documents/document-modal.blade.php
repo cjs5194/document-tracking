@@ -128,18 +128,18 @@
                             <option value="" disabled>Select type</option>
                             @foreach([
                                 'ACIC','Accomplishment Report','Activity Proposal','Advisory','APP',
-                                'Authority to Release (ATR)','Audit Itinerary','Audit Observation Memorandum (AOM)',
-                                'Bid Documents','Certificate (Appreciation, Attendance, etc..)','Certification','Clearance',
-                                'Contract of Service','CSPRF','Customer Satisfaction Survey (CSS)','Daily Time Record (DTR)',
-                                'DA Comms','DA Memo','DA SO','Demand Letter','Disbursement Voucher (DV)',
-                                'Document Registration/ Revision Form(DRR)','Endorsement','Financial Accomplishment Report (FAR)',
-                                'FOI Request','Incident Report (IR)','ITR','Leave Application','Letter','LDDAP-ADA',
-                                'Memorandum of Agreement (MOA, MOU)','Minutes of Meeting (MoM)','Modification Advice Form (MAF)',
-                                'Notice of Award','Notice of Finality of Decision (NFD)','Notice of Salary Adjustment (NOSA)',
-                                'Notice of Step Increment (NOSI)','Obligation (ORS)','Overtime Request','PAR','PCC Letter',
-                                'PCC MEMO','PCC RC Letter','PCC SO','Performance and Commitment Review (PCR)','PPMP',
-                                'Program of Works (POW)','Project Proposal','Purchase Order (PO)','Purchase Request PR','PTR',
-                                'Revised Activity Proposal','Report','Research Proposal','Resolution','Statement of Account (SOA)',
+                                'Authority to Release','Audit Itinerary','Audit Observation Memorandum',
+                                'Bid Documents','Certificate','Certification','Clearance',
+                                'Contract of Service','CSPRF','Customer Satisfaction Survey','Daily Time Record',
+                                'DA Comms','DA Memo','DA SO','Demand Letter','Disbursement Voucher',
+                                'Document Registration/ Revision Form','Endorsement','Financial Accomplishment Report',
+                                'FOI Request','Incident Report','ITR','Leave Application','Letter','LDDAP-ADA',
+                                'Memorandum of Agreement','Minutes of Meeting','Modification Advice Form',
+                                'Notice of Award','Notice of Finality of Decision','Notice of Salary Adjustment',
+                                'Notice of Step Increment','Obligation','Overtime Request','PAR','PCC Letter',
+                                'PCC MEMO','PCC RC Letter','PCC SO','Performance and Commitment Review','PPMP',
+                                'Program of Works','Project Proposal','Purchase Order','Purchase Request PR','PTR',
+                                'Revised Activity Proposal','Report','Research Proposal','Resolution','Statement of Account',
                                 'Training Request','Transmittal','Travel Order','Travel Report','Trip Ticket'
                             ] as $type)
                                 <option value="{{ $type }}">{{ $type }}</option>
