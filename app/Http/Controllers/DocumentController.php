@@ -201,9 +201,15 @@ class DocumentController extends Controller
             'records_received' => 'nullable|string|max:255',
             'records_date_received' => 'nullable|date',
             'records_remarks' => 'nullable|string|max:255',
+            'users' => 'required|array|min:1',
+            'users.*' => 'exists:users,id',
         ]);
 
-        $document->update($request->all());
+        $document->update($request->except('users'));
+
+        if ($request->filled('users')) {
+            $document->users()->sync($request->users); // sync pivot table
+        }
 
         return Auth::user()->hasRole('admin')
             ? redirect()->route('admin.documents.index')->with('success', 'Document updated successfully.')
