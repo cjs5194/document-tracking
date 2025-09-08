@@ -3,7 +3,7 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="text-center mb-6">
-        <img src="{{ asset('images/favicon.jpg') }}" alt="ICTS Logo" class="w-20 h-20 mx-auto rounded-full shadow">
+        <img src="{{ asset('images/logo.jpg') }}" alt="ICTS Logo" class="w-20 h-20 mx-auto rounded-lg">
         <h1 class="mt-4 text-2xl font-bold text-gray-700 dark:text-gray-200">
             Document Tracking System
         </h1>

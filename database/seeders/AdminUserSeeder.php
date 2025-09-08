@@ -20,15 +20,27 @@ class AdminUserSeeder extends Seeder
         $role = Role::firstOrCreate(['name' => 'admin']);
 
         // Create an admin user
-        $user = User::updateOrCreate(
+        $userAdmin = User::updateOrCreate(
             ['email' => 'admin@gmail.com'], // Use a unique identifier (e.g., email)
             [
-                'name' => 'Admin User',
+                'name' => 'Admin',
                 'password' => bcrypt('password') // Use a secure password
             ]
         );
 
         // Assign the admin role to the user
-        $user->assignRole($role);
+        $userAdmin->assignRole($role);
+
+        // Create an admin for records
+        $userAdminRecords = User::updateOrCreate(
+            ['email' => 'records-admin@gmail.com'], // Use a unique identifier (e.g., email)
+            [
+                'name' => 'Records Admin',
+                'password' => bcrypt('password') // Use a secure password
+            ]
+        );
+
+        // Assign the admin role to the user
+        $userAdminRecords->assignRole($role);
     }
 }
