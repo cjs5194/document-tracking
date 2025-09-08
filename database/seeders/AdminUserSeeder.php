@@ -35,7 +35,7 @@ class AdminUserSeeder extends Seeder
         $userAdminRecords = User::updateOrCreate(
             ['email' => 'records-admin@gmail.com'], // Use a unique identifier (e.g., email)
             [
-                'name' => 'Records Admin',
+                'name' => 'records-admin',
                 'password' => bcrypt('password') // Use a secure password
             ]
         );
