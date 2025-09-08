@@ -17,7 +17,9 @@ class AdminUserSeeder extends Seeder
     public function run()
     {
         // Create an admin role if it does not exist
-        $role = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $recordsRole = Role::firstOrCreate(['name' => 'records']);
+        $oedRole = Role::firstOrCreate(['name' => 'oed']);
 
         // Create an admin user
         $userAdmin = User::updateOrCreate(
@@ -29,7 +31,7 @@ class AdminUserSeeder extends Seeder
         );
 
         // Assign the admin role to the user
-        $userAdmin->assignRole($role);
+        $userAdmin->assignRole($adminRole);
 
         // Create an admin for records
         $userAdminRecords = User::updateOrCreate(
@@ -41,6 +43,26 @@ class AdminUserSeeder extends Seeder
         );
 
         // Assign the admin role to the user
-        $userAdminRecords->assignRole($role);
+        $userAdminRecords->assignRole($adminRole);
+
+        // Create Records User
+        $userRecords = User::updateOrCreate(
+            ['email' => 'records@pcc.gov.ph'],
+            [
+                'name' => 'Records',
+                'password' => bcrypt('password')
+            ]
+        );
+        $userRecords->syncRoles([$adminRole, $recordsRole]);
+
+        // Create OED User
+        $userOed = User::updateOrCreate(
+            ['email' => 'oed@pcc.gov.ph'],
+            [
+                'name' => 'OED',
+                'password' => bcrypt('password')
+            ]
+        );
+        $userOed->assignRole($oedRole);
     }
 }

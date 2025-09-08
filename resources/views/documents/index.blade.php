@@ -2,7 +2,7 @@
     @php
         $prefix = Auth::user()->hasRole('admin') ? 'admin.' : '';
     @endphp
-    <div x-data="{ filterStatus: 'all', open: false, filterOpen: false, logsOpen: false }">
+    <div id="documentTable" x-data="{ filterStatus: 'all', open: false, filterOpen: false, logsOpen: false }">
         {{-- Start Cards --}}
         <div class="flex flex-wrap gap-6">
             <!-- All Documents -->
@@ -710,4 +710,12 @@
         </div>
     </div>
 </div>
+
+<script>
+    if (window.location.pathname === "/documents") {
+        setInterval(() => {
+            window.location.reload();
+        }, 120000);
+    }
+</script>
 

@@ -13,7 +13,7 @@
     >
         <h2 class="text-lg font-semibold mb-4">Filter Documents</h2>
 
-        <form action="{{ route('documents.index') }}" method="GET">
+        <form action="{{ auth()->user()->hasRole('admin') ? route('admin.documents.index') : route('documents.index') }}" method="GET">
             <!-- ➜ Make the selects 2×2 using a grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Document Type -->
