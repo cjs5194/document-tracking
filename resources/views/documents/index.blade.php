@@ -147,8 +147,8 @@
                     <tr class="bg-gray-100">
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Document #</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Doc Type</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 w-64">Particulars</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Doc Type</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Particulars</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FORWARDED to OED</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">OED Level</th>
                         {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th> --}}
@@ -546,7 +546,7 @@
                             </td>
                             @hasanyrole('admin|records')
                             <td>
-                            <div class="flex items-center justify-center gap-2 mr-2">
+                            <div class="flex items-center justify-center gap-1 mr-2">
                                 <!-- View Button -->
                                 <div class="relative" x-data="{ tooltip: false }">
                                     <button
@@ -559,6 +559,8 @@
                                             users: @js($document->users->pluck('name')) // from pivot
                                         }
                                     })"
+                                    @mouseenter="tooltip = true"
+                                    @mouseleave="tooltip = false"
                                     class="flex items-center justify-center p-2 rounded-full hover:scale-105 transition-transform"
                                     style="background-color:#1f4b82;"
                                 >

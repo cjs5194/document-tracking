@@ -51,12 +51,12 @@
             </x-primary-button>
         </div>
     </form>
-    <div class="mt-4 text-center">
+    {{-- <div class="mt-4 text-center">
         <p class="text-sm text-gray-600 dark:text-gray-400">
             Don't have an account?
             <a href="{{ route('register') }}" class="text-indigo-600 hover:underline dark:text-indigo-400">
                 Register an account
             </a>
         </p>
-    </div>
+    </div> --}}
 </x-guest-layout>

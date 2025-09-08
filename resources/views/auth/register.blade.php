@@ -1,4 +1,4 @@
-<x-guest-layout>
+{{-- <x-guest-layout>
     <div class="text-center mb-6">
         <img src="{{ asset('images/favicon.jpg') }}" alt="ICTS Logo" class="w-20 h-20 mx-auto rounded-full shadow">
         <h1 class="mt-4 text-2xl font-bold text-gray-700 dark:text-gray-200">
@@ -55,4 +55,4 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+</x-guest-layout> --}}
