@@ -2,7 +2,7 @@
     @php
         $prefix = Auth::user()->hasRole('admin') ? 'admin.' : '';
     @endphp
-    <div id="documentTable" x-data="{ filterStatus: 'all', open: false, filterOpen: false, logsOpen: false }">
+    <div id="documentTable" x-data="{ filterStatus: 'all', open: false, filterOpen: false, logsOpen: false, exportOpen: false }">
         {{-- Start Cards --}}
         @include('documents.partials.status-cards')
 
@@ -37,6 +37,18 @@
                                         class="text-gray-800 px-4 py-2 rounded border border-gray-400 hover:border-gray-600 ml-2">
                                         Clear Filter
                                     </a>
+
+                                    <!-- Export Button -->
+                                    @hasanyrole('admin|records')
+                                    <button
+                                        @click="exportOpen = true"
+                                        class="text-gray-800 px-4 py-2 rounded border border-gray-400 hover:border-gray-600 ml-2"
+                                    >
+                                        Export csv
+                                    </button>
+
+                                    @include('documents.partials.export-csv')
+                                    @endhasanyrole
                                 </div>
                             </th>
                         </tr>

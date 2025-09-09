@@ -7,6 +7,8 @@ use App\Models\DocumentLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Division;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Response;
 
 class DocumentController extends Controller
 {
@@ -365,46 +367,105 @@ class DocumentController extends Controller
         return back()->with('success', 'Document forwarded to Records successfully.');
     }
 
-    // public function markForwardedToRecords(Document $document)
-    // {
-    //     try {
-    //         $document->update([
-    //             'forwarded_to_records' => now(),
-    //         ]);
+    public function export(Request $request)
+    {
+        $query = Document::query();
 
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Document forwarded to Records successfully.'
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Failed to forward document.'
-    //         ], 500);
-    //     }
-    // }
+        // Apply filters (same as index)
+        if ($request->filled('status') && $request->status !== 'all') {
+            if ($request->status === 'no-status') {
+                $query->whereNull('oed_status');
+            } else {
+                $query->where('oed_status', $request->status);
+            }
+        }
 
-    // public function sendToUsers(Request $request, Document $document)
-    // {
-    //     $request->validate([
-    //         'users' => 'required|array',
-    //         'users.*' => 'exists:users,id',
-    //     ]);
+        if ($request->filled('document_type')) {
+            $query->where('document_type', $request->document_type);
+        }
 
-    //     // Attach users without detaching existing ones
-    //     $document->users()->syncWithoutDetaching($request->users);
+        if ($request->filled('oed_received')) {
+            if ($request->oed_received === 'Received') {
+                $query->where('oed_received', 'Received');
+            } elseif ($request->oed_received === 'Not yet received') {
+                $query->whereNull('oed_received')
+                    ->orWhere('oed_received', '!=', 'Received');
+            }
+        }
 
-    //     // Optional: Log who sent to which users
-    //     foreach ($request->users as $userId) {
-    //         DocumentLog::create([
-    //             'document_id' => $document->id,
-    //             'changed_by' => Auth::user()->name,
-    //             'type' => 'send',
-    //             'status' => "Sent to user_id: $userId",
-    //         ]);
-    //     }
+        if ($request->filled('records_received')) {
+            if ($request->records_received === 'Received') {
+                $query->where('records_received', 'Received');
+            } elseif ($request->records_received === 'Not yet received') {
+                $query->whereNull('records_received')
+                    ->orWhere('records_received', '!=', 'Received');
+            }
+        }
 
-    //     return redirect()->back()->with('success', 'Document sent successfully.');
-    // }
+        // Admin & Records can see all, otherwise filter by user
+        if (!auth()->user()->hasAnyRole(['admin', 'records'])) {
+            $query->whereHas('users', function ($q) {
+                $q->where('users.id', auth()->id());
+            });
+        }
 
+        $documents = $query->get([
+            'date_received',
+            'document_no',
+            'document_type',
+            'particulars',
+            'oed_received',
+            'oed_date_received',
+            'oed_status',
+            'forwarded_to_records',
+            'records_received',
+            'records_date_received',
+            'records_remarks',
+        ]);
+
+        // CSV headers
+        $csvHeader = [
+            'Date Received',
+            'Document No',
+            'Document Type',
+            'Particulars',
+            'OED Received',
+            'OED Date Received',
+            'OED Status',
+            'Forwarded to Records',
+            'Records Received',
+            'Records Date Received',
+            'Records Remarks',
+        ];
+
+        $filename = 'documents_export_' . now()->format('Ymd_His') . '.csv';
+
+        $callback = function () use ($documents, $csvHeader) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $csvHeader);
+
+            foreach ($documents as $doc) {
+                fputcsv($file, [
+                    $doc->date_received?->format('m/d/Y H:i') ?? '',
+                    $doc->document_no,
+                    $doc->document_type,
+                    $doc->particulars,
+                    $doc->oed_received,
+                    $doc->oed_date_received?->format('m/d/Y H:i') ?? '',
+                    $doc->oed_status,
+                    $doc->forwarded_to_records?->format('m/d/Y H:i') ?? '',
+                    $doc->records_received,
+                    $doc->records_date_received?->format('m/d/Y H:i') ?? '',
+                    $doc->records_remarks,
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename={$filename}",
+        ]);
+    }
 }

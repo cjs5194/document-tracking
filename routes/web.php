@@ -60,6 +60,10 @@ Route::middleware(['auth', 'role:users|oed|records'])->group(function () {
 Route::middleware(['auth', 'role:admin|records'])->group(function () {
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])
         ->name('documents.destroy');
+
+    // ✅ Add export route here so only admin & records can access
+    Route::get('/documents/export/csv', [DocumentController::class, 'export'])
+        ->name('documents.export.csv');
 });
 
 // -----------------------------
