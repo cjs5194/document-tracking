@@ -4,105 +4,7 @@
     @endphp
     <div id="documentTable" x-data="{ filterStatus: 'all', open: false, filterOpen: false, logsOpen: false }">
         {{-- Start Cards --}}
-        <div class="flex flex-wrap gap-6">
-            <!-- All Documents -->
-            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'all']) }}'"
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
-                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-500">
-                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">{{ $allCount }}</h4>
-                        <div class="text-gray-500">All Documents</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- In Progress -->
-             <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'In Progress']) }}'"
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
-                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-500">
-                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M12 8v4l3 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="12" cy="12" r="9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">{{ $inProgressCount }}</h4>
-                        <div class="text-gray-500">In Progress</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Under Review -->
-            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'Under Review']) }}'"
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
-                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-yellow-500">
-                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <circle cx="12" cy="12" r="9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 12h8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">{{ $underReviewCount }}</h4>
-                        <div class="text-gray-500">Under Review</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- For Release -->
-            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'For Release']) }}'"
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
-                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-green-500">
-                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M8 7h8M8 11h8M8 15h8M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">{{ $forReleaseCount }}</h4>
-                        <div class="text-gray-500">For Release</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Returned -->
-            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['status' => 'Returned']) }}'"
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
-                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-red-500">
-                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">{{ $returnedCount }}</h4>
-                        <div class="text-gray-500">Returned</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Completed -->
-            <div onclick="window.location.href='{{ route($prefix . 'documents.index', ['completed' => 'Completed']) }}'"
-                class="flex-1 min-w-[200px] cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg">
-                <div class="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
-                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-500">
-                        <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="mx-5">
-                        <h4 class="text-2xl font-semibold text-gray-700">{{ $completedCount }}</h4>
-                        <div class="text-gray-500">Completed</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('documents.partials.status-cards')
 
         <!-- Documents Table -->
         <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 mt-4">
@@ -621,7 +523,7 @@
                                 <!-- Delete Button -->
                                 <div class="relative" x-data="{ tooltip: false }">
                                     <button
-                                         @click="$dispatch('open-delete-modal', '{{ route('documents.destroy', $document->id) }}')"
+                                        @click="$dispatch('open-delete-modal', '{{ route('documents.destroy', $document->id) }}')"
                                         @mouseenter="tooltip = true"
                                         @mouseleave="tooltip = false"
                                         class="flex items-center justify-center p-2 rounded-full hover:scale-105 transition-transform"
@@ -636,6 +538,8 @@
                                                 1 0 011 1v1H9V4a1 1 0 011-1z"/>
                                         </svg>
                                     </button>
+
+                                    <!-- Tooltip -->
                                     <div x-show="tooltip" x-transition
                                         class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1
                                             text-xs bg-gray-800 text-white rounded whitespace-nowrap">
@@ -679,37 +583,6 @@
         </div>
     </div>
 </x-admin-layout>
-
-<!-- Delete Modal -->
-<div x-data="{ open: false, deleteUrl: '' }"
-     @open-delete-modal.window="deleteUrl = $event.detail; open = true">
-
-    <div x-show="open" x-cloak
-         class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30">
-        <div @click.away="open = false"
-             class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-white text-center">
-                Are you sure you want to delete this document?
-            </h2>
-
-            <form :action="deleteUrl" method="POST" class="mt-4">
-                @csrf
-                @method('DELETE')
-                <div class="flex justify-center space-x-4">
-                    <button type="button"
-                            @click="open = false"
-                            class="py-2 px-4 bg-gray-600 text-white rounded hover:bg-gray-500 focus:outline-none">
-                        Cancel
-                    </button>
-                    <button type="submit"
-                            class="py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700">
-                        Yes, Delete
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 <script>
     if (window.location.pathname === "/documents") {
