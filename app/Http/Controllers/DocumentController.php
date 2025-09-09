@@ -359,12 +359,30 @@ class DocumentController extends Controller
     public function markForwardedToRecords($id)
     {
         $document = Document::findOrFail($id);
-        $document->update([
-            'forwarded_to_records' => now(),
-        ]);
+        $document->forwarded_to_records = now();
+        $document->save();
 
         return back()->with('success', 'Document forwarded to Records successfully.');
     }
+
+    // public function markForwardedToRecords(Document $document)
+    // {
+    //     try {
+    //         $document->update([
+    //             'forwarded_to_records' => now(),
+    //         ]);
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Document forwarded to Records successfully.'
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Failed to forward document.'
+    //         ], 500);
+    //     }
+    // }
 
     // public function sendToUsers(Request $request, Document $document)
     // {

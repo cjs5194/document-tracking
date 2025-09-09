@@ -38,7 +38,7 @@ Route::middleware(['auth', 'role:users|oed|records'])->group(function () {
         ->name('documents.oed.status');
     Route::post('/documents/{document}/remarks', [DocumentController::class, 'updateOedRemarks'])
         ->name('documents.oed.remarks');
-    Route::patch('/documents/{id}/forward-to-records', [DocumentController::class, 'markForwardedToRecords'])
+    Route::post('/documents/{id}/forward-to-records', [DocumentController::class, 'markForwardedToRecords'])
         ->name('documents.forwardToRecords');
 
     // Records routes
