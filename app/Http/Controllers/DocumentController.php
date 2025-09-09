@@ -79,6 +79,15 @@ class DocumentController extends Controller
         }
     }
 
+    if ($request->filled('year')) {
+        $query->whereYear('date_received', $request->year);
+
+        // Filter by month only if year is provided
+        if ($request->filled('month')) {
+            $query->whereMonth('date_received', $request->month);
+        }
+    }
+
     // ===============================
     // Pagination
     // ===============================
@@ -86,7 +95,8 @@ class DocumentController extends Controller
                        ->paginate($perPage)
                        ->appends($request->only([
                            'perPage', 'status', 'document_type', 'oed_received',
-                           'oed_status', 'records_received', 'completed'
+                           'oed_status', 'records_received', 'completed',
+                           'year', 'month'
                        ]));
 
     // ===============================
@@ -371,7 +381,9 @@ class DocumentController extends Controller
     {
         $query = Document::query();
 
+        // ===============================
         // Apply filters (same as index)
+        // ===============================
         if ($request->filled('status') && $request->status !== 'all') {
             if ($request->status === 'no-status') {
                 $query->whereNull('oed_status');
@@ -402,7 +414,20 @@ class DocumentController extends Controller
             }
         }
 
-        // Admin & Records can see all, otherwise filter by user
+        // ===============================
+        // Year & Month filters
+        // ===============================
+        if ($request->filled('year')) {
+            $query->whereYear('date_received', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('date_received', $request->month);
+        }
+
+        // ===============================
+        // Role-based access
+        // ===============================
         if (!auth()->user()->hasAnyRole(['admin', 'records'])) {
             $query->whereHas('users', function ($q) {
                 $q->where('users.id', auth()->id());
@@ -423,7 +448,9 @@ class DocumentController extends Controller
             'records_remarks',
         ]);
 
+        // ===============================
         // CSV headers
+        // ===============================
         $csvHeader = [
             'Date Received',
             'Document No',
@@ -446,16 +473,16 @@ class DocumentController extends Controller
 
             foreach ($documents as $doc) {
                 fputcsv($file, [
-                    $doc->date_received?->format('m/d/Y H:i') ?? '',
+                    $doc->date_received?->format('j-F-Y - g:i A') ?? '',
                     $doc->document_no,
                     $doc->document_type,
                     $doc->particulars,
                     $doc->oed_received,
-                    $doc->oed_date_received?->format('m/d/Y H:i') ?? '',
+                    $doc->oed_date_received?->format('j-F-Y - g:i A') ?? '',
                     $doc->oed_status,
-                    $doc->forwarded_to_records?->format('m/d/Y H:i') ?? '',
+                    $doc->forwarded_to_records?->format('j-F-Y - g:i A') ?? '',
                     $doc->records_received,
-                    $doc->records_date_received?->format('m/d/Y H:i') ?? '',
+                    $doc->records_date_received?->format('j-F-Y - g:i A') ?? '',
                     $doc->records_remarks,
                 ]);
             }
@@ -468,4 +495,5 @@ class DocumentController extends Controller
             "Content-Disposition" => "attachment; filename={$filename}",
         ]);
     }
+
 }

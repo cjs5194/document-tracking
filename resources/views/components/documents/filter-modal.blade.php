@@ -5,21 +5,22 @@
     class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/30"
     @keydown.escape.window="filterOpen = false"
     @click.away="filterOpen = false"
+    x-data="{ filterYear: '{{ request('year') }}' }"
 >
     <!-- Modal Wrapper -->
     <div
-        class="bg-white rounded border border-gray-400 shadow-lg p-4 w-full max-w-2xl mx-auto"
+        class="bg-white rounded border border-gray-400 shadow-lg p-6 w-full max-w-2xl mx-auto"
         @click.stop
     >
-        <h2 class="text-lg font-semibold mb-4">Filter Documents</h2>
+        <h2 class="text-lg font-semibold mb-4 text-center">Filter Documents</h2>
 
         <form action="{{ auth()->user()->hasRole('admin') ? route('admin.documents.index') : route('documents.index') }}" method="GET">
-            <!-- ➜ Make the selects 2×2 using a grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
                 <!-- Document Type -->
                 <div>
                     <label class="block text-sm font-medium mb-1">Document Type</label>
-                    <select name="document_type" class="w-full border rounded p-2 text-sm">
+                                        <select name="document_type" class="w-full border rounded p-2 text-sm">
                         <option value="" {{ request('document_type') ? '' : 'selected' }}>All</option>
                         <option value="ACIC">ACIC</option>
                         <option value="Accomplishment Report">Accomplishment Report</option>
@@ -117,19 +118,50 @@
                         <option value="Not yet received" {{ request('records_received') == 'Not yet received' ? 'selected' : '' }}>Not yet received</option>
                     </select>
                 </div>
+
+                <!-- Year -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Year</label>
+                    <select name="year" x-model="filterYear" class="w-full border rounded p-2 text-sm">
+                        <option value="">All</option>
+                        @php
+                            $currentYear = now()->year;
+                            $startYear = $currentYear - 10;
+                        @endphp
+                        @for($y = $currentYear; $y >= $startYear; $y--)
+                            <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                </div>
+
+                <!-- Month -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Month</label>
+                    <select name="month" :disabled="!filterYear" class="w-full border rounded p-2 text-sm">
+                        <option value="">All</option>
+                        @foreach([
+                            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+                            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+                            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+                        ] as $num => $name)
+                            <option value="{{ $num }}" {{ request('month') == $num ? 'selected' : '' }}>{{ $name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Completed -->
+                <div>
+                    <label class="block text-sm font-medium mb-1">Completed</label>
+                    <select name="completed" class="w-full border rounded p-2 text-sm">
+                        <option value="" {{ request('completed') ? '' : 'selected' }}>All</option>
+                        <option value="Completed" {{ request('completed') == 'Completed' ? 'selected' : '' }}>Completed</option>
+                        <option value="Not yet completed" {{ request('completed') == 'Not yet completed' ? 'selected' : '' }}>Not yet completed</option>
+                    </select>
+                </div>
+
             </div>
 
-            <!-- Completed -->
-            <div>
-                <label class="block text-sm font-medium mb-1">Completed</label>
-                <select name="completed" class="w-full border rounded p-2 text-sm">
-                    <option value="" {{ request('completed') ? '' : 'selected' }}>All</option>
-                    <option value="Completed" {{ request('completed') == 'Completed' ? 'selected' : '' }}>Completed</option>
-                    <option value="Not yet completed" {{ request('completed') == 'Not yet completed' ? 'selected' : '' }}>Not yet completed</option>
-                </select>
-            </div>
-
-            <!-- Footer buttons -->
+            <!-- Footer Buttons -->
             <div class="flex justify-end gap-2 mt-6">
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 text-sm rounded hover:bg-blue-700">
                     Apply Filter
