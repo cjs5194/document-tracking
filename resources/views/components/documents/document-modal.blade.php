@@ -94,7 +94,35 @@
         <!-- Content -->
         <div class="p-4 flex-1 overflow-y-visible">
 
-            <form x-ref="documentForm" :action="formAction" method="POST">
+            <form x-ref="documentForm"
+                :action="formAction"
+                method="POST"
+                @submit.prevent="
+                    let form = $refs.documentForm;
+                    let formData = new FormData(form);
+
+                    fetch(formAction, {
+                        method: isUpdate ? 'POST' : 'POST', // still POST, with _method=PATCH if updating
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        body: formData
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            Toast.fire({
+                                icon: 'success',
+                                title: isUpdate ? 'Document updated successfully' : 'Document added successfully'
+                            });
+                            open = false;
+                            setTimeout(() => window.location.reload(), 1500);
+                        } else {
+                            Toast.fire({ icon: 'error', title: 'Failed to save document' });
+                        }
+                    })
+                    .catch(() => {
+                        Toast.fire({ icon: 'error', title: 'Request failed' });
+                    });
+                "
+            >
                 @csrf
                 <input type="hidden" name="_method" :value="isUpdate ? 'PATCH' : 'POST'">
 

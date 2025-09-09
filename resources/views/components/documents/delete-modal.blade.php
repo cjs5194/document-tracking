@@ -9,7 +9,28 @@
                 Are you sure you want to delete this document?
             </h2>
 
-            <form :action="deleteUrl" method="POST" class="mt-4">
+            <form @submit.prevent="
+                fetch(deleteUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: new URLSearchParams({ _method: 'DELETE' })
+                })
+                .then(res => {
+                    if (res.ok) {
+                        Toast.fire({ icon: 'success', title: 'Document deleted successfully' });
+                        open = false;
+                        setTimeout(() => window.location.reload(), 1500);
+                    } else {
+                        Toast.fire({ icon: 'error', title: 'Failed to delete document' });
+                    }
+                })
+                .catch(() => {
+                    Toast.fire({ icon: 'error', title: 'Request failed' });
+                });
+            " class="mt-4">
                 @csrf
                 @method('DELETE')
                 <div class="flex justify-center space-x-4">

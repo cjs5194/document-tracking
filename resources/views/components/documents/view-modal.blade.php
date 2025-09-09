@@ -2,7 +2,9 @@
      @open-view-modal.window="doc=$event.detail.doc; open=true">
 
     <div x-show="open" x-cloak
-         class="fixed inset-0 z-50 flex items-center justify-center bg-white/30">
+     class="fixed inset-0 z-50 flex items-center justify-center bg-white/10"
+     x-transition.opacity
+     style="backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);">
         <div @click.away="open=false"
              class="bg-white rounded border border-gray-400 shadow-lg p-4 w-full max-w-2xl mx-auto">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Document Details</h2>
