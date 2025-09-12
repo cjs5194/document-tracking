@@ -185,7 +185,7 @@
                             <option value="" disabled>Select type</option>
                             @foreach([
                                 'ACIC','Accomplishment Report','Activity Proposal','Advisory','APP',
-                                'Authority to Release','Audit Itinerary','Audit Observation Memorandum',
+                                'Authority to Release','Audit Itinerary','Audit Observation Memorandum', 'Approved Budget for the Contract',
                                 'Bid Documents','Certificate','Certification','Clearance',
                                 'Contract of Service','CSPRF','Customer Satisfaction Survey','Daily Time Record',
                                 'DA Comms','DA Memo','DA SO','Demand Letter','Disbursement Voucher',

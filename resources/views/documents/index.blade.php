@@ -39,7 +39,7 @@
                                     </a>
 
                                     <!-- Export Button -->
-                                    @hasanyrole('admin|records')
+                                    @hasanyrole('admin|records|oed')
                                     <button
                                         @click="exportOpen = true"
                                         class="text-gray-800 px-4 py-2 rounded border border-gray-400 hover:border-gray-600 ml-2"
