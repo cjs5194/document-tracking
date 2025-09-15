@@ -88,6 +88,15 @@ class DocumentController extends Controller
         }
     }
 
+    if ($request->filled('search')) {
+        $searchTerm = $request->search;
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('document_no', 'LIKE', "%{$searchTerm}%")
+            ->orWhere('document_type', 'LIKE', "%{$searchTerm}%")
+            ->orWhere('particulars', 'LIKE', "%{$searchTerm}%");
+        });
+    }
+
     // ===============================
     // Pagination
     // ===============================
@@ -354,6 +363,7 @@ class DocumentController extends Controller
     {
         $document->update([
             'completed_at' => now(),
+            'oed_status' => 'Released',
         ]);
 
         return redirect()->back()->with('success', 'Document marked as completed.');
@@ -384,11 +394,11 @@ class DocumentController extends Controller
         // ===============================
         // Apply filters (same as index)
         // ===============================
-        if ($request->filled('status') && $request->status !== 'all') {
-            if ($request->status === 'no-status') {
+        if ($request->filled('oed_status')) {
+            if ($request->oed_status === 'null') {
                 $query->whereNull('oed_status');
             } else {
-                $query->where('oed_status', $request->status);
+                $query->where('oed_status', $request->oed_status);
             }
         }
 
@@ -411,6 +421,14 @@ class DocumentController extends Controller
             } elseif ($request->records_received === 'Not yet received') {
                 $query->whereNull('records_received')
                     ->orWhere('records_received', '!=', 'Received');
+            }
+        }
+
+        if ($request->filled('completed')) {
+            if ($request->completed === 'Completed') {
+                $query->whereNotNull('completed_at');
+            } elseif ($request->completed === 'Not yet completed') {
+                $query->whereNull('completed_at');
             }
         }
 

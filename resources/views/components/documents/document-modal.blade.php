@@ -190,7 +190,7 @@
                                 'Contract of Service','CSPRF','Customer Satisfaction Survey','Daily Time Record',
                                 'DA Comms','DA Memo','DA SO','Demand Letter','Disbursement Voucher',
                                 'Document Registration/ Revision Form','Endorsement','Financial Accomplishment Report',
-                                'FOI Request','Incident Report','ITR','Leave Application','Letter','LDDAP-ADA',
+                                'FOI Request','Incident Report','ITR','Leave Application','Letter','LDDAP-ADA', 'Liquidation Report',
                                 'Memorandum of Agreement','Minutes of Meeting','Modification Advice Form',
                                 'Notice of Award','Notice of Finality of Decision','Notice of Salary Adjustment',
                                 'Notice of Step Increment','Obligation','Overtime Request','PAR','PCC Letter',
@@ -208,7 +208,9 @@
                     <!-- Particulars -->
                     <div>
                         <label class="block text-sm font-medium mb-1">Particulars</label>
-                        <input type="text" name="particulars" x-ref="particulars" class="w-full border rounded p-2 text-sm" required>
+                        <textarea name="particulars" x-ref="particulars"
+                            class="w-full border rounded p-2 text-sm"
+                            rows="3" required></textarea>
                         <p x-text="errors.particulars" class="text-red-500 text-sm mt-1"></p>
                     </div>
 

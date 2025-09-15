@@ -49,6 +49,9 @@
 
                                     @include('documents.partials.export-csv')
                                     @endhasanyrole
+
+                                    <!-- Search Bar -->
+                                    @include('documents.partials.document-search')
                                 </div>
                             </th>
                         </tr>
@@ -68,7 +71,9 @@
                         {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th> --}}
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Status</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Logs</th>
-                        {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Remarks OED</th> --}}
+                        @hasanyrole('admin|records|oed')
+                            <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Remarks</th>
+                        @endhasanyrole
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FWD to RECORDS</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Records</th>
                         {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th> --}}
@@ -120,43 +125,7 @@
                                     @include('components.documents.status-logs-modal')
                                 </div>
                             </td>
-                            {{-- <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->oed_remarks }}' }">
-                                @hasrole('oed')
-                                    @if ($document->oed_date_received)
-                                        <template x-if="!editing">
-                                            <span @click="editing = true" class="cursor-pointer text-blue-600 hover:underline" x-text="remarks || 'Add Remarks'"></span>
-                                        </template>
-                                        <template x-if="editing">
-                                            <div class="flex flex-col space-y-1">
-                                                <textarea x-model="remarks" class="border border-gray-300 rounded p-1 text-xs resize-none"></textarea>
-                                                <div class="flex items-center space-x-2">
-                                                    <button @click="
-                                                        fetch('{{ route('documents.oed.remarks', $document->id) }}', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json',
-                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                                            },
-                                                            body: JSON.stringify({ oed_remarks: remarks })
-                                                        })
-                                                        .then(res => res.json())
-                                                        .then(data => {
-                                                            editing = false;
-                                                            Toast.fire({ icon: 'success', title: 'Remarks updated' });
-                                                        })
-                                                        .catch(() => {
-                                                            Toast.fire({ icon: 'error', title: 'Update failed' });
-                                                        });
-                                                    " class="bg-green-500 text-white px-2 py-0.5 text-xs rounded">Save</button>
-                                                    <button @click="editing = false" class="text-xs text-gray-500">Cancel</button>
-                                                </div>
-                                            </div>
-                                        </template>
-                                    @endif
-                                @else
-                                    <span>{{ $document->oed_remarks }}</span>
-                                @endhasrole
-                            </td> --}}
+                            @include('documents.partials.oed-remarks', ['document' => $document])
                             <td class="px-5 py-3">
                                 @include('documents.partials.forward-to-records', ['document' => $document])
                             </td>

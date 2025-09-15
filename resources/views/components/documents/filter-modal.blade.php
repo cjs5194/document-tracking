@@ -53,6 +53,7 @@
                         <option value="Leave Application">Leave Application</option>
                         <option value="Letter">Letter</option>
                         <option value="LDDAP-ADA">LDDAP-ADA</option>
+                         <option value="Liquidation Report">Liquidation Report</option>
                         <option value="Memorandum of Agreement">Memorandum of Agreement (MOA, MOU)</option>
                         <option value="Minutes of Meeting">Minutes of Meeting (MoM)</option>
                         <option value="Modification Advice Form">Modification Advice Form (MAF)</option>
@@ -105,7 +106,7 @@
                         <option value="For Release" {{ request('oed_status') == 'For Release' ? 'selected' : '' }}>For Release</option>
                         <option value="Under Review" {{ request('oed_status') == 'Under Review' ? 'selected' : '' }}>Under Review</option>
                         <option value="In Progress" {{ request('oed_status') == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                        <option value="Returned" {{ request('oed_status') == 'Returned' ? 'selected' : '' }}>Returned</option>
+                        <option value="Released" {{ request('oed_status') == 'Released' ? 'selected' : '' }}>Released</option>
                         <option value="null" {{ request('oed_status') == 'null' ? 'selected' : '' }}>No status</option>
                     </select>
                 </div>
