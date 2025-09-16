@@ -12,6 +12,7 @@
                         document_no: @js($document->document_no),
                         document_type: @js($document->document_type),
                         particulars: @js($document->particulars),
+                        forwarded_to_records: '{{ optional($document->forwarded_to_records)->format('m/d/Y h:i A') }}',
                         users: @js($document->users->pluck('name')) // from pivot
                     }
                 })"

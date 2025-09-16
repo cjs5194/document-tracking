@@ -1,4 +1,4 @@
-<div x-data="{ open:false, doc:{date_received:'', document_no:'', document_type:'', particulars:'', users:[]} }"
+<div x-data="{ open:false, doc:{date_received:'', document_no:'', document_type:'', particulars:'', forwarded_to_records:'', users:[]} }"
      @open-view-modal.window="doc=$event.detail.doc; open=true">
 
     <div x-show="open" x-cloak
@@ -14,6 +14,7 @@
                 <p><span class="font-medium">Document No.:</span> <span x-text="doc.document_no || '—'"></span></p>
                 <p><span class="font-medium">Document Type:</span> <span x-text="doc.document_type || '—'"></span></p>
                 <p><span class="font-medium">Particulars:</span> <span x-text="doc.particulars || '—'"></span></p>
+                <p><span class="font-medium">Date forwarded to Records:</span> <span x-text="doc.forwarded_to_records || '—'"></span></p>
 
                 <div>
                     <span class="font-medium">Send to:</span>

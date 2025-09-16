@@ -74,7 +74,9 @@
                         @hasanyrole('admin|records|oed')
                             <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Remarks</th>
                         @endhasanyrole
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FWD to RECORDS</th>
+                        @hasanyrole('oed|users')
+                            <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FWD to RECORDS</th>
+                        @endhasanyrole
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Records</th>
                         {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th> --}}
                         @hasanyrole('admin|records|oed')
@@ -126,9 +128,11 @@
                                 </div>
                             </td>
                             @include('documents.partials.oed-remarks', ['document' => $document])
-                            <td class="px-5 py-3">
-                                @include('documents.partials.forward-to-records', ['document' => $document])
-                            </td>
+                            @hasanyrole('oed|users')
+                                <td class="px-5 py-3">
+                                    @include('documents.partials.forward-to-records', ['document' => $document])
+                                </td>
+                            @endhasanyrole
                             <td class="px-5 py-3">
                                 @include('documents.partials.records-receive', ['document' => $document])
                             </td>
