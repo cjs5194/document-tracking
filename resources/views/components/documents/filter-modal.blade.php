@@ -50,6 +50,7 @@
                         <option value="FOI Request">FOI Request</option>
                         <option value="Incident Report">Incident Report (IR)</option>
                         <option value="ITR">ITR</option>
+                        <option value="Justification">Justification</option>
                         <option value="Leave Application">Leave Application</option>
                         <option value="Letter">Letter</option>
                         <option value="LDDAP-ADA">LDDAP-ADA</option>

@@ -1,6 +1,5 @@
 @props(['document'])
 
-@hasanyrole('admin|records|oed')
 <td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->records_remarks }}' }">
     @hasrole('records')
         <!-- Display Mode -->
@@ -57,4 +56,3 @@
         <span>{{ $document->records_remarks }}</span>
     @endhasrole
 </td>
-@endhasanyrole

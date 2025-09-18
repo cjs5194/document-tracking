@@ -190,7 +190,7 @@
                                 'Contract of Service','CSPRF','Customer Satisfaction Survey','Daily Time Record',
                                 'DA Comms','DA Memo','DA SO','Demand Letter','Disbursement Voucher',
                                 'Document Registration/ Revision Form','Endorsement','Financial Accomplishment Report',
-                                'FOI Request','Incident Report','ITR','Leave Application','Letter','LDDAP-ADA', 'Liquidation Report',
+                                'FOI Request','Incident Report','ITR','Justification','Leave Application','Letter','LDDAP-ADA', 'Liquidation Report',
                                 'Memorandum of Agreement','Minutes of Meeting','Modification Advice Form',
                                 'Notice of Award','Notice of Finality of Decision','Notice of Salary Adjustment',
                                 'Notice of Step Increment','Obligation','Overtime Request','PAR','PCC Letter',
