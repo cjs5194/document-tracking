@@ -177,7 +177,7 @@
     if (window.location.pathname === "/documents") {
         setInterval(() => {
             window.location.reload();
-        }, 120000);
+        }, 300000);
     }
 </script>
 

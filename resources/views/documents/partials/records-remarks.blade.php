@@ -1,6 +1,6 @@
 @props(['document'])
 
-<td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->records_remarks }}' }">
+<td class="px-5 py-3" x-data="{ editing: false, remarks: @js($document->records_remarks) }">
     @hasrole('records')
         <!-- Display Mode -->
         <template x-if="!editing">

@@ -1,7 +1,7 @@
 @props(['document'])
 
 @hasanyrole('admin|records|oed')
-<td class="px-5 py-3" x-data="{ editing: false, remarks: '{{ $document->oed_remarks }}' }">
+<td class="px-5 py-3" x-data="{ editing: false, remarks: @js($document->oed_remarks) }">
     @hasrole('oed')
         <template x-if="!editing">
             <span @click="editing = true" class="cursor-pointer text-blue-600 hover:underline" x-text="remarks || 'Add Remarks'"></span>

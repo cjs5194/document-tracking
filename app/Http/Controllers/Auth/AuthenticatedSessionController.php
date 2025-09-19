@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -16,17 +17,28 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
+        // If the user is logged in, log them out and invalidate the session.
+        // Auth::logout();
+        // request()->session()->invalidate();
+        // request()->session()->regenerateToken();
+
         return view('auth.login');
     }
 
     public function store(Request $request): RedirectResponse
     {
+        // Always start fresh to avoid stale sessions
+        Auth::logout(); // Log out any active session
+        $request->session()->invalidate(); // Invalidate session data
+        $request->session()->regenerateToken(); // Regenerate CSRF token
+
         $request->validate([
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        if (Auth::attempt($request->only('email', 'password'), false)) {
+            // Regenerate session to prevent session fixation attacks
             $request->session()->regenerate();
 
             $user = Auth::user();
@@ -55,6 +67,9 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+
+        // Clear the remember me cookie (if any)
+        \Cookie::queue(\Cookie::forget(Auth::getRecallerName()));
 
         return redirect('/');
     }
