@@ -186,11 +186,11 @@
                             @foreach([
                                 'ACIC','Accomplishment Report','Activity Proposal','Advisory','APP',
                                 'Authority to Release','Audit Itinerary','Audit Observation Memorandum', 'Approved Budget for the Contract',
-                                'Bid Documents','Certificate','Certification','Clearance',
+                                'Bid Documents','Certificate','Certification','Check','Clearance', 'Contract Agreement',
                                 'Contract of Service','CSPRF','Customer Satisfaction Survey','Daily Time Record',
                                 'DA Comms','DA Memo','DA SO','Demand Letter','Disbursement Voucher',
                                 'Document Registration/ Revision Form','Endorsement','Financial Accomplishment Report',
-                                'FOI Request','Incident Report','ITR','Justification','Leave Application','Letter','LDDAP-ADA', 'Liquidation Report',
+                                'FOI Request','Form','Incident Report','ITR','Justification','Leave Application','Letter','LDDAP-ADA', 'Liquidation Report',
                                 'Memorandum of Agreement','Minutes of Meeting','Modification Advice Form',
                                 'Notice of Award','Notice of Finality of Decision','Notice of Salary Adjustment',
                                 'Notice of Step Increment','Obligation','Overtime Request','PAR','PCC Letter',

@@ -34,7 +34,9 @@
                         <option value="Bid Documents">Bid Documents</option>
                         <option value="Certificate">Certificate (Appreciation, Attendance, etc..)</option>
                         <option value="Certification">Certification</option>
+                        <option value="Check">Check</option>
                         <option value="Clearance">Clearance</option>
+                        <option value="Contract Agreement">Contract Agreement</option>
                         <option value="Contract of Service">Contract of Service</option>
                         <option value="CSPRF">CSPRF</option>
                         <option value="Customer Satisfaction Survey">Customer Satisfaction Survey (CSS)</option>
@@ -48,6 +50,7 @@
                         <option value="Endorsement">Endorsement</option>
                         <option value="Financial Accomplishment Report">Financial Accomplishment Report (FAR)</option>
                         <option value="FOI Request">FOI Request</option>
+                        <option value="Form">Form</option>
                         <option value="Incident Report">Incident Report (IR)</option>
                         <option value="ITR">ITR</option>
                         <option value="Justification">Justification</option>

@@ -64,15 +64,17 @@
                     <tr class="bg-gray-100">
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Document #</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Doc Type</th>
+                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Type</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200">Particulars</th>
-                        <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FORWARDED to OED</th>
+                        @hasanyrole('admin|records|oed')
+                            <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FORWARDED to OED</th>
+                        @endhasanyrole
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">OED Level</th>
                         {{-- <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Date Received</th> --}}
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Status</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Logs</th>
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">OED-Remarks</th>
-                        @hasanyrole('oed|users')
+                        @hasanyrole('oed')
                             <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">FWD to RECORDS</th>
                         @endhasanyrole
                         <th class="px-5 py-3 text-left font-semibold text-gray-600 uppercase border-b border-gray-200 whitespace-nowrap">Records</th>
@@ -91,7 +93,9 @@
                             <td class="px-5 py-3 whitespace-nowrap">{{ $document->document_no }}</td>
                             <td class="px-5 py-3">{{ $document->document_type }}</td>
                             <td class="px-5 py-3 w-64">{{ $document->particulars }}</td>
-                            @include('documents.partials.forward-to-oed', ['document' => $document])
+                            @hasanyrole('admin|records|oed')
+                                @include('documents.partials.forward-to-oed', ['document' => $document])
+                            @endhasanyrole
                             @include('documents.partials.oed-receive', ['document' => $document])
                             {{-- <td class="px-5 py-3">{{ $document->oed_date_received?->format('m/d/Y h:i A') }}</td> --}}
                             @include('documents.partials.oed-status', ['document' => $document])
@@ -124,7 +128,7 @@
                                 </div>
                             </td>
                             @include('documents.partials.oed-remarks', ['document' => $document])
-                            @hasanyrole('oed|users')
+                            @hasanyrole('oed')
                                 <td class="px-5 py-3">
                                     @include('documents.partials.forward-to-records', ['document' => $document])
                                 </td>
